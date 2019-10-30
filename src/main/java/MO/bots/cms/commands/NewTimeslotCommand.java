@@ -9,6 +9,8 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 import MO.bots.cms.logic.ContestsManager;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Role;
+import MO.bots.*;
+
 
 /**
  * @author IcosahedralDice
@@ -24,7 +26,6 @@ public class NewTimeslotCommand extends Command {
 		this.aliases = new String[] {"addtimeslot"};
 		this.help = "Adds a timeslot. Note start and end have to be YYYY-MM-DDTHH:mm:ssZ, e.g. 2019-11-11T13:00:00Z";
 		this.arguments = "name start end reactionID position<optional>";
-		this.category = new Category("Admin");
 	}
 
 	@Override

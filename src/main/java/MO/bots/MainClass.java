@@ -4,6 +4,7 @@ import java.util.Scanner;
 
 import javax.security.auth.login.LoginException;
 
+import com.jagrosh.jdautilities.command.Command.Category;
 import com.jagrosh.jdautilities.command.CommandClientBuilder;
 
 import MO.bots.cms.commands.*;
@@ -12,6 +13,10 @@ import net.dv8tion.jda.core.JDABuilder;
 
 public class MainClass {
 	public static Scanner sc = new Scanner(System.in);
+	public static Category[] categories = {new Category("Admin"),
+											new Category("Misc"),
+											new Category("User help")
+	};
 	
 	public static void main (String[] args) throws LoginException {
 		CommandClientBuilder cmsBuilder = new CommandClientBuilder();

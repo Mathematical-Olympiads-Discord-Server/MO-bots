@@ -10,6 +10,7 @@ import MO.bots.cms.logic.ContestsManager;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Role;
 import net.dv8tion.jda.core.entities.User;
+import MO.bots.*;
 
 /**
  * @author IcosahedralDice
@@ -24,7 +25,6 @@ public class NewContestCommand extends Command {
 		this.name = "newcontest";
 		this.arguments = "name messageID";
 		this.aliases = new String[] {"new"};
-		this.category = new Category("Admin");
 		this.guildOnly = true;
 	}
 

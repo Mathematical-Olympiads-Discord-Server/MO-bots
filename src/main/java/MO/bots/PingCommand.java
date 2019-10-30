@@ -14,7 +14,6 @@ public class PingCommand extends Command {
 		this.aliases = new String[] {"pong", "ping!"};
 		this.help = "Pings to check whether the bot is working. ";
 		this.guildOnly = false;
-		this.category = new Category("Misc");
 	}
 	
 	@Override

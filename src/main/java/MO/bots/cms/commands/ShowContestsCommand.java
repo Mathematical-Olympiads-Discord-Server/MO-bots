@@ -21,7 +21,6 @@ public class ShowContestsCommand extends Command {
 		this.name = "showcontests";
 		this.aliases = new String[] {"list", "show", "showall"};
 		this.help = "Shows all contests";
-		this.category = new Category("User help");
 		this.guildOnly = false;
 	}
 
