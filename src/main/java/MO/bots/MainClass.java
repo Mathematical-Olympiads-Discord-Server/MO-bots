@@ -27,6 +27,7 @@ public class MainClass {
 								new ShowContestsCommand(),
 								new NewContestCommand(),
 								new NewTimeslotCommand(),
+								new NewTimeslotUCommand(),
 								new UpdateContestantsCommand());
 		JDABuilder cms = new JDABuilder(AccountType.BOT);
 		String token = System.getenv("APITOKEN");

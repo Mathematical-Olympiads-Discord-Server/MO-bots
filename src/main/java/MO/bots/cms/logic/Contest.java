@@ -56,6 +56,7 @@ public class Contest {
 
 	/**
 	 * Adds a timeslot to the contest. 
+	 * @param name Name of the timeslot
 	 * @param start Start time of the timeslot
 	 * @param end End time of the timeslot
 	 * @param reaction reaction ID which users will pick
@@ -63,6 +64,21 @@ public class Contest {
 	public void addTimeslot(String name, String start, String end, long reaction) {
 		Instant startTime = Instant.parse(start);
 		Instant endTime = Instant.parse(end);
+		timeslots.add(new Timeslot(name, startTime, endTime, reaction));
+	}
+	
+	/**
+	 * Adds a new timeslot to this contest. Uses
+	 * longs for start and end instead of strings,
+	 * because this method uses Unix time. 
+	 * @param name Name of the timeslot
+	 * @param start Start time (in Unix time)
+	 * @param end End time (in Unix time)
+	 * @param reaction reaction ID
+	 */
+	public void addTimeslot(String name, long start, long end, long reaction) {
+		Instant startTime = Instant.ofEpochSecond(start);
+		Instant endTime = Instant.ofEpochSecond(end);
 		timeslots.add(new Timeslot(name, startTime, endTime, reaction));
 	}
 	

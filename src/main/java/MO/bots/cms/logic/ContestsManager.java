@@ -79,6 +79,26 @@ public class ContestsManager {
 	}
 	
 	/**
+	 * Adds a new timeslot to a specified contest. This version of the method
+	 * takes long inputs from start and end, representing the use of Unix time
+	 * as opposed to the ISO8601 time used by the other methods. 
+	 * @param name Name of the timeslot. 
+	 * @param start Start time (in Unix time)
+	 * @param end End time (in Unix time)
+	 * @param reactID Reaction ID
+	 * @param position Position (note 0-indexing)
+	 * @return
+	 */
+	public static String newTimeslot(String name, long start, long end, long reactID, int position) {
+		try {
+			currentContests.get(position).addTimeslot(name, start, end, reactID);
+		} catch (IndexOutOfBoundsException e) {
+			return "There is no contest at this position. ";
+		} 
+		return "Successfully created a new timeslot for contest " + currentContests.get(position).getName() + ".";
+	}
+	
+	/**
 	 * The version of newTimeslot with a position parameter. Use this
 	 * version when there is more than one currently running contest as 
 	 * the position parameter helps to differentiate between them. 
