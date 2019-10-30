@@ -9,23 +9,21 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 import MO.bots.cms.logic.ContestsManager;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Role;
-import net.dv8tion.jda.core.entities.User;
-import MO.bots.*;
 
 /**
  * @author IcosahedralDice
  *
  */
-public class NewContestCommand extends Command {
+public class UpdateContestantsCommand extends Command {
 
 	/**
 	 * 
 	 */
-	public NewContestCommand() {
-		this.name = "newcontest";
-		this.arguments = "name messageID";
-		this.aliases = new String[] {"new"};
+	public UpdateContestantsCommand() {
+		this.name = "updatecontestants";
+		this.help = "Updates the contestants based on reactions. Admin-only command. ";
 		this.guildOnly = true;
+		this.arguments = "contest-number<optional>";
 	}
 
 	@Override
@@ -37,16 +35,16 @@ public class NewContestCommand extends Command {
 			return;
 		}
 		
-		String[] args = event.getArgs().split(" ");
-		long l = 1;
-		try {
-			l = Long.parseLong(args[1]);
-		} catch (Exception e) {
-			event.reply("Error - invalid input format");
-			return;
+		if (event.getArgs().contentEquals("")) {
+			//No arguments provided
+			event.reply(ContestsManager.updateContestants(0, event));
+		} else {
+			try {
+				event.reply(ContestsManager.updateContestants(Integer.parseInt(event.getArgs()), event));
+			} catch (Exception e) {
+				event.reply("Invalid input - check your arguments. ");
+			}
 		}
-		ContestsManager.newContest(args[0], event.getChannel().getIdLong(), l);
-		event.reply("New contest created with name **" + args[0] + "** tied to message ID **" + args[1] + "**");
 	}
 
 }

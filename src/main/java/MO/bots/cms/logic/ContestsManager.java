@@ -2,6 +2,8 @@ package MO.bots.cms.logic;
 
 import java.util.ArrayList;
 
+import com.jagrosh.jdautilities.command.CommandEvent;
+
 public class ContestsManager {
 	public static ArrayList<Contest> currentContests = new ArrayList<Contest>();
 	
@@ -11,8 +13,8 @@ public class ContestsManager {
 	 * @param messageId message ID
 	 * @return
 	 */
-	public static String newContest(String name, long messageId) {
-		currentContests.add(new Contest(name, messageId));
+	public static String newContest(String name, long channelId, long messageId) {
+		currentContests.add(new Contest(name, channelId, messageId));
 		return "New contest successfully made";
 	}
 	
@@ -25,6 +27,15 @@ public class ContestsManager {
 		for (Contest c : currentContests) {
 			sb.append(c.getName());
 			sb.append("\n");
+		}
+		return sb.toString();
+	}
+	
+	public static String showContests(int level) {
+		StringBuilder sb = new StringBuilder();
+		for (Contest c : currentContests) {
+			sb.append(c.getContestInfo(level));
+			sb.append("\n\n");
 		}
 		return sb.toString();
 	}
@@ -47,5 +58,15 @@ public class ContestsManager {
 			return "There is no contest at this position. ";
 		} 
 		return "Successfully created a new timeslot for contest " + currentContests.get(position).getName() + ".";
+	}
+	
+	public static String updateContestants(int position, CommandEvent triggerEvent) {
+		try {
+			currentContests.get(position).updateContestants(triggerEvent);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "An error occurred. ";
+		}
+		return "Successfully updated contestants for contest " + currentContests.get(position).getName() + ".";
 	}
 }

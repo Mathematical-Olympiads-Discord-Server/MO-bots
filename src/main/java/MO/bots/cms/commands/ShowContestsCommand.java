@@ -20,14 +20,20 @@ public class ShowContestsCommand extends Command {
 	public ShowContestsCommand() {
 		this.name = "showcontests";
 		this.aliases = new String[] {"list", "show", "showall"};
-		this.help = "Shows all contests";
+		this.help = "Shows all contests. Level 1 - just names, Level 2 - timeslots, Level 3 - timeslots + contestants";
 		this.guildOnly = false;
+		this.arguments = "level";
 	}
 
 	@Override
 	protected void execute(CommandEvent event) {
-		event.reply(ContestsManager.listContests());
-
+		try {
+			int level = Integer.parseInt(event.getArgs());
+			event.reply(ContestsManager.showContests(level));
+		} catch (Exception e) {
+			e.printStackTrace();
+			event.reply("There was an error - check your arguments. ");
+		}
 	}
 
 }

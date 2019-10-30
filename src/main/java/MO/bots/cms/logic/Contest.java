@@ -2,7 +2,13 @@ package MO.bots.cms.logic;
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.List;
 
+import com.jagrosh.jdautilities.command.CommandEvent;
+
+import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.core.entities.Message;
+import net.dv8tion.jda.core.entities.MessageReaction;
 import net.dv8tion.jda.core.entities.User;
 
 public class Contest {
@@ -23,6 +29,11 @@ public class Contest {
 	private Instant end;
 	
 	/**
+	 * ID of the channel holding the message. 
+	 */
+	private long channelID;
+	
+	/**
 	 * The message which the Contest's reactions are tied to. 
 	 */
 	private long messageID;
@@ -37,8 +48,9 @@ public class Contest {
 	 * @param name Name of the contest
 	 * @param messageId message ID to pull contest takers from
 	 */
-	public Contest(String name, long messageId) {
+	public Contest(String name, long channelId, long messageId) {
 		this.name = name;
+		this.channelID = channelId;
 		this.messageID = messageId;
 	}
 
@@ -79,6 +91,27 @@ public class Contest {
 			return "Invalid level";
 		}
 	}
+	
+	/**
+	 * Updates the contestants sitting the contest at each timeslot. 
+	 * @param event the event which triggered this update, to get 
+	 * the guild, channel, message from which to pull users
+	 */
+	public void updateContestants(CommandEvent event) {
+		Message signupMessage = event.getGuild().getTextChannelById(channelID).getMessageById(messageID).complete();
+		List<MessageReaction> reactions = signupMessage.getReactions();
+		long currentID = 0L;
+		for (Timeslot t : timeslots) {
+			t.clearUsers();
+			currentID = t.getReactionId();
+			for (MessageReaction r : reactions) {
+				if (r.getReactionEmote().getIdLong() == currentID) {
+					List<User> reactedUsers = r.getUsers().complete();
+					for (User u : reactedUsers) {t.addUser(u);}
+				} 
+			}
+		}
+	}
 }
 
 class Timeslot {
@@ -104,7 +137,7 @@ class Timeslot {
 	 * the contest at this timeslot
 	 */
 	private long reactionID;
-	
+	public long getReactionId() {return reactionID;}
 	
 	/**
 	 * Creates a new timeslot. 
@@ -116,6 +149,7 @@ class Timeslot {
 		this.startTime = startTime;
 		this.endTime = endTime;
 		this.reactionID = reaction;
+		users = new ArrayList<User>();
 	}
 	
 	/**
@@ -125,6 +159,7 @@ class Timeslot {
 	public void addUser(User u) {
 		users.add(u);
 	}
+	
 	
 	/**
 	 * Prints information about this timeslot. 
@@ -136,6 +171,13 @@ class Timeslot {
 		for(User u : users) {
 			System.out.println(u.toString());
 		}
+	}
+	
+	/**
+	 * Clears the ArrayList of users. 
+	 */
+	public void clearUsers() {
+		users.clear();
 	}
 	
 	/**
