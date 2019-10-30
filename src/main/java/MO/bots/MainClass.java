@@ -20,7 +20,8 @@ public class MainClass {
 		cmsBuilder.setOwnerId("281300961312374785");
 		cmsBuilder.addCommands(new PingCommand(),
 								new NewContestCommand(),
-								new ShowContestsCommand());
+								new ShowContestsCommand(),
+								new NewTimeslotCommand());
 		JDABuilder cms = new JDABuilder(AccountType.BOT);
 		String token = System.getenv("APITOKEN");
 		if (token == null) {
