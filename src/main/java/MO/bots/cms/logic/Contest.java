@@ -146,6 +146,7 @@ class Timeslot {
 	 * @param reaction
 	 */
 	public Timeslot(String name, Instant startTime, Instant endTime, long reaction) {
+		this.name = name;
 		this.startTime = startTime;
 		this.endTime = endTime;
 		this.reactionID = reaction;

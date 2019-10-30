@@ -41,7 +41,7 @@ public class NewTimeslotCommand extends Command {
 			String[] args = event.getArgs().split(" ");
 			if (args.length < 4 || args.length > 5) {
 				event.reply("Invalid argument format. ");
-			} else if (args.length == 3) {
+			} else if (args.length == 4) {
 				event.reply(ContestsManager.newTimeslot(args[0], args[1], args[2], Long.parseLong(args[3])));
 			} else {
 				event.reply(ContestsManager.newTimeslot(args[0], args[1], args[2], Long.parseLong(args[3]), Integer.parseInt(args[4])));
