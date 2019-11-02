@@ -19,6 +19,15 @@ public class ContestsManager {
 	}
 	
 	/**
+	 * Adds a new contest based on a pre-loaded contest. If 
+	 * the contest is not pre-loaded, please use newContest(String, long, long). 
+	 * @param c The pre-loaded contest to add. 
+	 */
+	public static void addNewContest(Contest c) {
+		currentContests.add(c);
+	}
+	
+	/**
 	 * Lists all the contests (equivalent to calling showContests(1)
 	 * @return a String to display to the user. 
 	 */

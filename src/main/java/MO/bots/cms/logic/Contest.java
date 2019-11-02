@@ -67,6 +67,18 @@ public class Contest {
 		timeslots.add(new Timeslot(name, startTime, endTime, reaction));
 	}
 	
+	
+	public void addContestant(CommandEvent event, String timeslotName, long userID) {
+		User contestant = event.getGuild().getMemberById(userID).getUser();
+		for (Timeslot t : timeslots) {
+			if (t.getName().contentEquals(timeslotName)) {
+				t.addUser(contestant);
+				return;
+			}
+		}
+		throw new IllegalArgumentException("No timeslot with that name found while attempting to add user " + userID);
+	}
+	
 	/**
 	 * Adds a new timeslot to this contest. Uses
 	 * longs for start and end instead of strings,
@@ -147,6 +159,7 @@ class Timeslot {
 	private ArrayList<User> users;
 	
 	private String name;
+	public String getName() {return name;}
 	
 	/**
 	 * Reaction representing users who wish to sit
