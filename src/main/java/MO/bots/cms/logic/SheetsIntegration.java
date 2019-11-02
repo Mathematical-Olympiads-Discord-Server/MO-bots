@@ -97,8 +97,10 @@ public class SheetsIntegration {
     			c.addTimeslot((String) timeslot.get(0), Long.parseLong((String) timeslot.get(1)), 
     					Long.parseLong((String) timeslot.get(2)), Long.parseLong((String) timeslot.get(3)));
     		}
-    		for (List<Object> user : users) {
-    			c.addContestant(event, (String) user.get(2), Long.parseLong((String) user.get(1)));
+    		if (users != null) {
+    			for (List<Object> user : users) {
+    				c.addContestant(event, (String) user.get(2), Long.parseLong((String) user.get(1)));
+    			}
     		}
     		return c;
     	} catch (Exception e) {
