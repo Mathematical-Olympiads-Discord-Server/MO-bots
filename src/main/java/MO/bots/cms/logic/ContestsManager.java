@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 import com.jagrosh.jdautilities.command.CommandEvent;
 
+import net.dv8tion.jda.core.events.message.react.MessageReactionAddEvent;
+
 public class ContestsManager {
 	public static ArrayList<Contest> currentContests = new ArrayList<Contest>();
 	
@@ -129,6 +131,18 @@ public class ContestsManager {
 			return "There is no contest at this position. ";
 		} 
 		return "Successfully created a new timeslot for contest " + currentContests.get(position).getName() + ".";
+	}
+	
+	/**
+	 * This method loops through all current contests and adds a 
+	 * user if the MessageReactionAddEvent matches what the contest is
+	 * looking for. 
+	 * @param event
+	 */
+	public static void autoReactionAdd(MessageReactionAddEvent event) {
+		for (Contest c : currentContests) {
+			c.autoReactionAdd(event);
+		}
 	}
 	
 	public static String updateContestants(int position, CommandEvent triggerEvent) {

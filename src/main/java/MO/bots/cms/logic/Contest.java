@@ -6,10 +6,10 @@ import java.util.List;
 
 import com.jagrosh.jdautilities.command.CommandEvent;
 
-import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageReaction;
 import net.dv8tion.jda.core.entities.User;
+import net.dv8tion.jda.core.events.message.react.MessageReactionAddEvent;
 
 public class Contest {
 	/**
@@ -55,6 +55,28 @@ public class Contest {
 	}
 
 	/**
+	 * Adds a contestant to a contest based on a reaction
+	 * they made to an event. This only happens if the reaction
+	 * and message is linked to the contest or timeslots. 
+	 * @param event Event that triggers this method. Used to get
+	 * information about the user such as ID, Guild, etc. 
+	 * @return true if it was added, false otherwise. 
+	 */
+	public boolean autoReactionAdd(MessageReactionAddEvent event) {
+		if (this.messageID != event.getMessageIdLong()) {return false;}
+		boolean addedAUser = false;
+		for (Timeslot t : timeslots) {
+			if (t.getReactionId() == event.getReactionEmote().getIdLong()) {
+				t.addUser(event.getUser());
+				addedAUser = true;
+			}
+		}
+		return addedAUser;
+		
+		
+	}
+	
+	/**
 	 * Adds a timeslot to the contest. 
 	 * @param name Name of the timeslot
 	 * @param start Start time of the timeslot
@@ -67,7 +89,12 @@ public class Contest {
 		timeslots.add(new Timeslot(name, startTime, endTime, reaction));
 	}
 	
-	
+	/**
+	 * Adds a single contestant to a specified timeslot. 
+	 * @param event Event which triggered the addition
+	 * @param timeslotName Name of the timeslot
+	 * @param userID The ID of the user to be added. 
+	 */
 	public void addContestant(CommandEvent event, String timeslotName, long userID) {
 		User contestant = event.getGuild().getMemberById(userID).getUser();
 		for (Timeslot t : timeslots) {
