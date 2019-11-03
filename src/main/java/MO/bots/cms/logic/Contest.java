@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.jagrosh.jdautilities.command.CommandEvent;
@@ -34,11 +35,13 @@ public class Contest {
 	 * ID of the channel holding the message. 
 	 */
 	private long channelID;
+	public long getChannelID() {return this.channelID;}
 	
 	/**
 	 * The message which the Contest's reactions are tied to. 
 	 */
 	private long messageID;
+	public long getMessageId() {return this.messageID;}
 	
 	/**
 	 * ID of the Google Sheets Spreadsheet which this contest backs
@@ -64,6 +67,42 @@ public class Contest {
 		this.messageID = messageId;
 	}
 
+	/**
+	 * Returns a {@code List<List<Object>>} representing data about
+	 * the timeslots held in this Contest object. 
+	 * @return a {@code List<List<Object>>} in the following form: <br>
+	 * one {@code List<Object>} per timeslot (let this be {@code t}). 
+	 * {@code t.get(0)} is the timeslot name, {@code t.get(1)} is the timeslot 
+	 * start time (in unix time), {@code t.get(2)} is the timeslot end time, and 
+	 * {@code t.get(3)} is the timeslot reaction. 
+	 */
+	public List<List<Object>> getTimeslotInfoAsList() {
+		List<List<Object>> toReturn = new ArrayList<>();
+		for (Timeslot t : timeslots) {
+			toReturn.add(Arrays.asList(t.getName(), t.getStartLong(), t.getEndLong(), t.getReactionId()));
+		}
+		
+		return toReturn;
+	}
+	
+	/**
+	 * Returns a {@code List<List<Object>>} representing data about 
+	 * all the contestants registered for the current contest. 
+	 * @return A {@code List<List<Object>>}, with one {@code List<List<Object>>}
+	 * per user. Entry is Username + "#" + discriminator (e.g. asdf#1234), ID, timeslot name. 
+	 */
+	public List<List<Object>> getUserInfoAsList() {
+		List<List<Object>> toReturn = new ArrayList<>();
+		for (Timeslot t : timeslots) {
+			for (User u : t.getUsers()) {
+				toReturn.add(Arrays.asList(u.getName() + "#" + u.getDiscriminator(), 
+						u.getIdLong(), t.getName()));
+			}
+		}
+		
+		return toReturn;
+	}
+	
 	/**
 	 * Adds a contestant to a contest based on a reaction
 	 * they made to an event. This only happens if the reaction
@@ -192,16 +231,19 @@ class Timeslot {
 	 * Start time of the contest (UTC)
 	 */
 	private Instant startTime;
+	public long getStartLong() {return this.startTime.getEpochSecond();}
 	
 	/**
 	 * End time of the contest (UTC)
 	 */
 	private Instant endTime;
+	public long getEndLong() {return this.endTime.getEpochSecond();}
 	
 	/**
 	 * Users sitting the contest at this time
 	 */
 	private ArrayList<User> users;
+	public ArrayList<User> getUsers() {return this.users;}
 	
 	private String name;
 	public String getName() {return name;}
@@ -234,8 +276,7 @@ class Timeslot {
 	public void addUser(User u) {
 		users.add(u);
 	}
-	
-	
+		
 	/**
 	 * Prints information about this timeslot. 
 	 */

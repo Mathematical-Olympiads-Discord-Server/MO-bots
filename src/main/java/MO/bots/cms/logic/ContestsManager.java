@@ -154,4 +154,22 @@ public class ContestsManager {
 		}
 		return "Successfully updated contestants for contest " + currentContests.get(position).getName() + ".";
 	}
+
+	public static String sync(CommandEvent triggerEvent) {
+		int contestNumber = 0;
+		try {
+			if (triggerEvent.getArgs().contentEquals("")) {
+				//Default to first contest
+				SheetsIntegration.saveContest(currentContests.get(0));
+			} else {
+				contestNumber = Integer.parseInt(triggerEvent.getArgs().split(" ")[0]);
+				SheetsIntegration.saveContest(currentContests.get(contestNumber));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return e.getMessage();
+		}
+		return "Successfully saved contest " + currentContests.get(contestNumber).getName() + " to sheet with ID "
+				+ currentContests.get(contestNumber).getSpreadsheetId();
+	}
 }

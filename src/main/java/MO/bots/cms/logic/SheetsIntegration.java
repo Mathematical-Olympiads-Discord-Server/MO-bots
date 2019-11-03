@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.security.GeneralSecurityException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -22,6 +23,8 @@ import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.SheetsScopes;
 import com.google.api.services.sheets.v4.model.AppendValuesResponse;
+import com.google.api.services.sheets.v4.model.BatchUpdateValuesRequest;
+import com.google.api.services.sheets.v4.model.BatchUpdateValuesResponse;
 import com.google.api.services.sheets.v4.model.ValueRange;
 import com.jagrosh.jdautilities.command.CommandEvent;
 
@@ -141,5 +144,53 @@ public class SheetsIntegration {
     	AppendValuesResponse result = service.spreadsheets().values()
     			.append(c.getSpreadsheetId(), usersAppendRange, body)
     			.setValueInputOption("RAW").execute();
+    	System.out.printf("%d cells updated.", result.getUpdates().getUpdatedCells());
+    }
+    
+    /**
+     * Saves a contest to a Google Sheet. 
+     * @param c The contest to save
+     * @throws IOException 
+     */
+    public static void saveContest(Contest c) throws IOException {
+    	if (c.getSpreadsheetId() == null) {
+    		throw new IllegalArgumentException("Attempting to save with no spreadsheet ID");
+    	}
+
+    	NetHttpTransport HTTP_TRANSPORT = null;
+		try {
+			HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
+		} catch (GeneralSecurityException e) {
+			e.printStackTrace();
+			return;
+		}
+    	Sheets service = new Sheets.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
+    			.setApplicationName(APPLICATION_NAME).build();
+    	
+    	List<List<Object>> generalInfo = Arrays.asList(
+			Arrays.asList(
+					c.getName(),
+					c.getChannelID(),
+					c.getMessageId()
+				)
+		);
+    	ValueRange infoRange = new ValueRange().setValues(generalInfo).setRange("Info!A2:C");
+    	
+    	List<List<Object>> timeslots = c.getTimeslotInfoAsList();
+    	ValueRange timeslotsRange = new ValueRange().setValues(timeslots).setRange("Timeslots!A2:D");
+    	
+    	List<List<Object>> users = c.getUserInfoAsList();
+    	ValueRange usersRange = new ValueRange().setValues(users).setRange("Users!A2:C");
+    	
+    	List<ValueRange> data = new ArrayList<ValueRange>(3);
+    	data.add(infoRange);
+    	data.add(timeslotsRange);
+    	data.add(usersRange);
+    	
+    	BatchUpdateValuesRequest req = new BatchUpdateValuesRequest()
+    			.setValueInputOption("RAW").setData(data);
+    	BatchUpdateValuesResponse response = service.spreadsheets().values()
+    			.batchUpdate(c.getSpreadsheetId(), req).execute();
+    	System.out.printf("%d cells updated.", response.getTotalUpdatedCells());
     }
 }

@@ -29,7 +29,8 @@ public class MainClass {
 								new NewTimeslotCommand(),
 								new NewTimeslotUCommand(),
 								new UpdateContestantsCommand(),
-								new LoadContestCommand());
+								new LoadContestCommand(),
+								new SyncCommand());
 		JDABuilder cms = new JDABuilder(AccountType.BOT);
 		String token = System.getenv("APITOKEN");
 		if (token == null) {
