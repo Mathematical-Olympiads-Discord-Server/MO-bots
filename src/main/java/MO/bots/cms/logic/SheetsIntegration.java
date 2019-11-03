@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.security.GeneralSecurityException;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -20,8 +21,11 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.SheetsScopes;
+import com.google.api.services.sheets.v4.model.AppendValuesResponse;
 import com.google.api.services.sheets.v4.model.ValueRange;
 import com.jagrosh.jdautilities.command.CommandEvent;
+
+import net.dv8tion.jda.core.entities.User;
 
 public class SheetsIntegration {
 	private static final String APPLICATION_NAME = "Mathematical Olympiad Discord Server Contest Management System";
@@ -93,6 +97,7 @@ public class SheetsIntegration {
     		List<Object> infoRow = info.get(0);
     		Contest c = new Contest((String) infoRow.get(0), Long.parseLong((String) infoRow.get(1)), 
     				Long.parseLong((String) infoRow.get(2)));
+    		c.setSpreadsheetId(spreadsheetId);
     		for (List<Object> timeslot : timeslots) {
     			c.addTimeslot((String) timeslot.get(0), Long.parseLong((String) timeslot.get(1)), 
     					Long.parseLong((String) timeslot.get(2)), Long.parseLong((String) timeslot.get(3)));
@@ -109,4 +114,32 @@ public class SheetsIntegration {
     	}
     }
     
+    /**
+     * Appends a single user on to the end of the Users sheet. 
+     * @param c the Contest to use 
+     * @param u the User to append
+     * @param timeslotName the name of the timeslot that the user is
+     * sitting the contest in. 
+     * @throws IOException 
+     * @throws GeneralSecurityException 
+     */
+    public static void appendUser (Contest c, User u, String timeslotName) throws GeneralSecurityException, IOException {
+    	final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
+    	Sheets service = new Sheets.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
+    			.setApplicationName(APPLICATION_NAME).build();
+    	final String usersAppendRange = "Users!A1";
+    	
+    	List<List<Object>> values = Arrays.asList(
+    				Arrays.asList(
+    						u.getName() + "#" + u.getDiscriminator(),
+    						u.getId(), 
+    						timeslotName
+    					)
+    			);
+    	
+    	ValueRange body = new ValueRange().setValues(values);
+    	AppendValuesResponse result = service.spreadsheets().values()
+    			.append(c.getSpreadsheetId(), usersAppendRange, body)
+    			.setValueInputOption("RAW").execute();
+    }
 }

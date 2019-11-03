@@ -1,5 +1,7 @@
 package MO.bots.cms.logic;
 
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +41,14 @@ public class Contest {
 	private long messageID;
 	
 	/**
+	 * ID of the Google Sheets Spreadsheet which this contest backs
+	 * up to. 
+	 */
+	private String spreadsheetId;
+	public String getSpreadsheetId() {return spreadsheetId;}
+	public void setSpreadsheetId(String spreadsheetId) {this.spreadsheetId = spreadsheetId;}
+	
+	/**
 	 * Holds information about the timeslots. 
 	 */
 	private ArrayList<Timeslot> timeslots = new ArrayList<Timeslot>();
@@ -68,6 +78,14 @@ public class Contest {
 		for (Timeslot t : timeslots) {
 			if (t.getReactionId() == event.getReactionEmote().getIdLong()) {
 				t.addUser(event.getUser());
+				if (spreadsheetId != null) 
+				try {
+					SheetsIntegration.appendUser(this, event.getUser(), t.getName());
+				} catch (GeneralSecurityException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 				addedAUser = true;
 			}
 		}
