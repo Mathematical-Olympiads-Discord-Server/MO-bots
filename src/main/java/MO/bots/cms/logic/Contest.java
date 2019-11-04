@@ -79,7 +79,7 @@ public class Contest {
 	public List<List<Object>> getTimeslotInfoAsList() {
 		List<List<Object>> toReturn = new ArrayList<>();
 		for (Timeslot t : timeslots) {
-			toReturn.add(Arrays.asList(t.getName(), t.getStartLong(), t.getEndLong(), t.getReactionId()));
+			toReturn.add(Arrays.asList(t.getName(), t.getStartLong(), t.getEndLong(), "" + t.getReactionId()));
 		}
 		
 		return toReturn;
@@ -96,7 +96,7 @@ public class Contest {
 		for (Timeslot t : timeslots) {
 			for (User u : t.getUsers()) {
 				toReturn.add(Arrays.asList(u.getName() + "#" + u.getDiscriminator(), 
-						u.getIdLong(), t.getName()));
+						u.getId(), t.getName()));
 			}
 		}
 		
@@ -214,7 +214,8 @@ public class Contest {
 		List<MessageReaction> reactions = signupMessage.getReactions();
 		long currentID = 0L;
 		for (Timeslot t : timeslots) {
-			t.clearUsers();
+			if (t.getReactionId() == 0) continue;	//Custom timeslots will have reactionId set to 0.
+			t.clearUsers();							//We don't want to update those. 
 			currentID = t.getReactionId();
 			for (MessageReaction r : reactions) {
 				if (r.getReactionEmote().getIdLong() == currentID) {

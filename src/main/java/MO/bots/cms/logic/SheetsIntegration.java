@@ -143,7 +143,7 @@ public class SheetsIntegration {
     	ValueRange body = new ValueRange().setValues(values);
     	AppendValuesResponse result = service.spreadsheets().values()
     			.append(c.getSpreadsheetId(), usersAppendRange, body)
-    			.setValueInputOption("RAW").execute();
+    			.setValueInputOption("USER_ENTERED").execute();
     	System.out.printf("%d cells updated.", result.getUpdates().getUpdatedCells());
     }
     
@@ -188,7 +188,7 @@ public class SheetsIntegration {
     	data.add(usersRange);
     	
     	BatchUpdateValuesRequest req = new BatchUpdateValuesRequest()
-    			.setValueInputOption("RAW").setData(data);
+    			.setValueInputOption("USER_ENTERED").setData(data);
     	BatchUpdateValuesResponse response = service.spreadsheets().values()
     			.batchUpdate(c.getSpreadsheetId(), req).execute();
     	System.out.printf("%d cells updated.", response.getTotalUpdatedCells());
