@@ -76,7 +76,7 @@ public class SheetsIntegration {
     public static Contest loadContest(String spreadsheetId, CommandEvent event) throws GeneralSecurityException, IOException {
     	final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
     	final String timeslotsRange = "Timeslots!A2:E";
-    	final String generalInfoRange = "Info!A2:C";
+    	final String generalInfoRange = "Info!A2:G";
     	final String usersRange = "Users!A2:C";
     	
     	Sheets service = new Sheets.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
@@ -98,8 +98,14 @@ public class SheetsIntegration {
     	
     	try {
     		List<Object> infoRow = info.get(0);
-    		Contest c = new Contest((String) infoRow.get(0), Long.parseLong((String) infoRow.get(1)), 
-    				Long.parseLong((String) infoRow.get(2)));
+    		Contest c = new Contest((String) infoRow.get(0),
+    				Long.parseLong((String) infoRow.get(1)),
+    				Long.parseLong((String) infoRow.get(2)),
+    				Long.parseLong((String) infoRow.get(3)),
+    				Long.parseLong((String) infoRow.get(4)),
+    				(String) infoRow.get(5),
+    				Long.parseLong((String) infoRow.get(6)));
+    				
     		c.setSpreadsheetId(spreadsheetId);
     		for (List<Object> timeslot : timeslots) {
     			c.addTimeslot((String) timeslot.get(0), Long.parseLong((String) timeslot.get(1)), 
@@ -170,11 +176,15 @@ public class SheetsIntegration {
     	List<List<Object>> generalInfo = Arrays.asList(
 			Arrays.asList(
 					c.getName(),
-					c.getChannelID(),
-					c.getMessageId()
+					"" + c.getChannelID(),
+					"" + c.getMessageId(),
+					"" + c.getRoleId(),
+					"" + c.getPcbChannelId(),
+					c.getFormLink(),
+					"" + c.getStaffMailId()
 				)
 		);
-    	ValueRange infoRange = new ValueRange().setValues(generalInfo).setRange("Info!A2:C");
+    	ValueRange infoRange = new ValueRange().setValues(generalInfo).setRange("Info!A2:G");
     	
     	List<List<Object>> timeslots = c.getTimeslotInfoAsList();
     	ValueRange timeslotsRange = new ValueRange().setValues(timeslots).setRange("Timeslots!A2:D");

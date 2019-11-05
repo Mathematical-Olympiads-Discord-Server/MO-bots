@@ -48,8 +48,35 @@ public class Contest {
 	 * up to. 
 	 */
 	private String spreadsheetId;
-	public String getSpreadsheetId() {return spreadsheetId;}
+	public String getSpreadsheetId() {return this.spreadsheetId;}
 	public void setSpreadsheetId(String spreadsheetId) {this.spreadsheetId = spreadsheetId;}
+	
+	public long roleId;
+	public long getRoleId() {return this.roleId;}
+	public void setRoleId(long roleId) {this.roleId = roleId;}
+	
+	private long pcbChannelId;
+	/**
+	 * ID of the channel where contestants can discuss the contest in. 
+	 * @return
+	 */
+	public long getPcbChannelId() {return this.pcbChannelId;}
+	
+	private String formLink;
+	/**
+	 * The link to the form where contestants should submit their 
+	 * solutions to. 
+	 * @return
+	 */
+	public String getFormLink() {return this.formLink;}
+	
+	private long staffMailId;
+	/**
+	 * Gets the ID of the Staff Mail bot in the server. Contestants
+	 * will DM the staff mail bot if they have any questions to ask. 
+	 * @return
+	 */
+	public long getStaffMailId() {return this.staffMailId;}
 	
 	/**
 	 * Holds information about the timeslots. 
@@ -67,6 +94,32 @@ public class Contest {
 		this.messageID = messageId;
 	}
 
+	/**
+	 * Full constructor. 
+	 * @param name
+	 * @param channelId
+	 * @param messageId
+	 * @param roleId
+	 * @param pcbChannelId
+	 * @param formLink
+	 * @param staffMailId
+	 */
+	public Contest(String name,
+			long channelId,
+			long messageId,
+			long roleId,
+			long pcbChannelId,
+			String formLink,
+			long staffMailId) {
+		this.name = name;
+		this.channelID = channelId;
+		this.messageID = messageId;
+		this.roleId = roleId;
+		this.pcbChannelId = pcbChannelId;
+		this.formLink = formLink;
+		this.staffMailId = staffMailId;
+	}
+	
 	/**
 	 * Returns a {@code List<List<Object>>} representing data about
 	 * the timeslots held in this Contest object. 
@@ -187,10 +240,24 @@ public class Contest {
 	 * @return the information
 	 */
 	public String getContestInfo(int level) {
+		StringBuilder sb = new StringBuilder();
+		sb.append(this.name);
+		sb.append(" ");
+		sb.append(this.channelID);
+		sb.append(" ");
+		sb.append(this.messageID);
+		sb.append(" ");
+		sb.append(this.roleId);
+		sb.append(" ");
+		sb.append(this.pcbChannelId);
+		sb.append(" ");
+		sb.append(this.formLink);
+		sb.append(" ");
+		sb.append(this.staffMailId);
+		sb.append("\n");
 		if (level == 1) {
-			return this.name;
+			return sb.toString();
 		} else if (level == 2 || level == 3) {
-			StringBuilder sb = new StringBuilder();
 			sb.append("Name: ");
 			sb.append(this.name);
 			sb.append("\nTimeslots:");
