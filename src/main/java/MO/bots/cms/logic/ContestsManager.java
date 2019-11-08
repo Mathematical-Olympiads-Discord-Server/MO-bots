@@ -145,6 +145,13 @@ public class ContestsManager {
 		}
 	}
 	
+	/**
+	 * Updates the contestants for a specified contest
+	 * @param position Position of the contest (0-indexed)
+	 * @param triggerEvent Event that triggered this method
+	 * being called. 
+	 * @return A string (message to reply to the user with)
+	 */
 	public static String updateContestants(int position, CommandEvent triggerEvent) {
 		try {
 			currentContests.get(position).updateContestants(triggerEvent);
@@ -172,4 +179,5 @@ public class ContestsManager {
 		return "Successfully saved contest " + currentContests.get(contestNumber).getName() + " to sheet with ID "
 				+ currentContests.get(contestNumber).getSpreadsheetId();
 	}
+
 }

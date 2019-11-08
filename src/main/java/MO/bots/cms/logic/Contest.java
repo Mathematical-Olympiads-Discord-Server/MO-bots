@@ -2,15 +2,20 @@ package MO.bots.cms.logic;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import com.jagrosh.jdautilities.command.CommandEvent;
 
+import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageReaction;
+import net.dv8tion.jda.core.entities.Role;
 import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.events.message.react.MessageReactionAddEvent;
 
@@ -30,6 +35,11 @@ public class Contest {
 	 * When the contest ends
 	 */
 	private Instant end;
+	
+	/**
+	 * The guild/server the contest is held in. 
+	 */
+	private Guild contestGuild;
 	
 	/**
 	 * ID of the channel holding the message. 
@@ -78,6 +88,9 @@ public class Contest {
 	 */
 	public long getStaffMailId() {return this.staffMailId;}
 	
+	private long finishedRoleId;
+	public long getFinishedRoleId() {return this.finishedRoleId;}
+	
 	/**
 	 * Holds information about the timeslots. 
 	 */
@@ -103,6 +116,7 @@ public class Contest {
 	 * @param pcbChannelId
 	 * @param formLink
 	 * @param staffMailId
+	 * @param g The guild this contest is in. 
 	 */
 	public Contest(String name,
 			long channelId,
@@ -110,7 +124,9 @@ public class Contest {
 			long roleId,
 			long pcbChannelId,
 			String formLink,
-			long staffMailId) {
+			long staffMailId,
+			long finishedRoleId,
+			Guild g) {
 		this.name = name;
 		this.channelID = channelId;
 		this.messageID = messageId;
@@ -118,6 +134,8 @@ public class Contest {
 		this.pcbChannelId = pcbChannelId;
 		this.formLink = formLink;
 		this.staffMailId = staffMailId;
+		this.finishedRoleId = finishedRoleId;
+		this.contestGuild = g;
 	}
 	
 	/**
@@ -196,7 +214,8 @@ public class Contest {
 	public void addTimeslot(String name, String start, String end, long reaction) {
 		Instant startTime = Instant.parse(start);
 		Instant endTime = Instant.parse(end);
-		timeslots.add(new Timeslot(name, startTime, endTime, reaction));
+		timeslots.add(new Timeslot(name, startTime, endTime, reaction,
+				this.contestGuild, this.roleId, this.formLink, this.finishedRoleId));
 	}
 	
 	/**
@@ -228,7 +247,8 @@ public class Contest {
 	public void addTimeslot(String name, long start, long end, long reaction) {
 		Instant startTime = Instant.ofEpochSecond(start);
 		Instant endTime = Instant.ofEpochSecond(end);
-		timeslots.add(new Timeslot(name, startTime, endTime, reaction));
+		timeslots.add(new Timeslot(name, startTime, endTime, reaction, 
+				this.contestGuild, this.roleId, this.formLink, this.finishedRoleId));
 	}
 	
 	/**
@@ -316,6 +336,9 @@ class Timeslot {
 	private String name;
 	public String getName() {return name;}
 	
+	private Guild contestGuild;
+	public Guild getContestGuild() {return contestGuild;}
+	
 	/**
 	 * Reaction representing users who wish to sit
 	 * the contest at this timeslot
@@ -323,18 +346,90 @@ class Timeslot {
 	private long reactionID;
 	public long getReactionId() {return reactionID;}
 	
+	private long roleId;
+	public long getRoleId() {return roleId;}
+	
+	private long finishedRoleId;
+	public long getFinishedRoleId() {return finishedRoleId;}
+	
+	/*
+	 * Timers to execute tasks when needed. 
+	 */
+	private Timer mainTimer;
+	private ArrayList<TimerTaskWithSchedule> schedule = new ArrayList<TimerTaskWithSchedule>();
+	
 	/**
 	 * Creates a new timeslot. 
 	 * @param startTime
 	 * @param endTime
 	 * @param reaction
 	 */
-	public Timeslot(String name, Instant startTime, Instant endTime, long reaction) {
+	public Timeslot(String name, Instant startTime, Instant endTime, long reaction, Guild g, long roleId, String formLink, long finishedRoleId) {
 		this.name = name;
 		this.startTime = startTime;
 		this.endTime = endTime;
 		this.reactionID = reaction;
 		users = new ArrayList<User>();
+		this.contestGuild = g;
+		this.roleId = roleId;
+		this.finishedRoleId = finishedRoleId;
+		
+		//Set up tasks
+		mainTimer = new Timer();
+		schedule.add(new ReminderTask(this, "15 minutes left before the contest starts. Please head "
+				+ "to the Contest Room VC soon. ", "before contest reminder", this.startTime.minus(Duration.ofMinutes(15))));
+		schedule.add(new ReminderTask(this, "5 minutes left before the contest starts. Please head "
+				+ "to the Contest Room VC soon. ", "before contest reminder 2", this.startTime.minus(Duration.ofMinutes(5))));
+		schedule.add(new ReminderTask(this, "The contest has started - you may now open the image and "
+				+ "begin working on the problems. If there is any issue please contact Staff Mail at the "
+				+ "top of the server memberlist. ", "Contest Start Reminder", this.startTime));
+		schedule.add(new ReminderTask(this, "30 minutes left before the contest ends. ", 
+				"30 minutes left reminder", this.endTime.minus(Duration.ofMinutes(30))));
+		schedule.add(new ReminderTask(this, "The contest is over. Please submit your solutions to the form"
+				+ "given in " + formLink + ". Thank you for participating in this contest!", "Contest end reminder",
+				this.endTime));
+		schedule.add(new AssignRolesTask(this, this.roleId, "Assign Now Competing roles", this.startTime));
+		schedule.add(new AssignRolesTask(this, this.finishedRoleId, "Assign finished roles", this.endTime));
+		schedule.add(new RemoveRolesTask(this, "Remove now competing roles", this.endTime));
+		
+		/*
+		beforeContestReminder = new ReminderTask(this, "15 minutes left before the contest starts. "
+				+ "Please head to the Contest Room VC soon. ");
+		beforeContestReminder2 = new ReminderTask(this, "5 minutes left before the contest starts. "
+				+ "Please head to the Contest Room VC soon. ");
+		startContestReminder = new ReminderTask(this, "The contest has started - you may now open the "
+				+ "image and begin working on the problems. If there is any issue please contact Staff "
+				+ "Mail at the top of the server memberlist. ");
+		thirtyMinutesLeftReminder = new ReminderTask(this, "30 minutes left before the contest ends. ");
+		contestOverReminder = new ReminderTask(this, "The contest is over. Please submit your solutions to the form"
+				+ "given in " + formLink + ". Thank you for participating in this contest!");
+		assignRoles = new AssignRolesTask(this, this.roleId);
+		assignFinishedRoles = new AssignRolesTask(this, this.finishedRoleId);
+		removeRoles = new RemoveRolesTask(this);*/
+
+		long startDelay = startTime.toEpochMilli() - Instant.now().toEpochMilli();
+		long endDelay   = endTime.toEpochMilli() - Instant.now().toEpochMilli();
+		System.out.println(startDelay);
+		System.out.println(endDelay);
+		
+		for (TimerTaskWithSchedule t : schedule) {
+			try {
+				mainTimer.schedule(t, t.schedule.toEpochMilli() - Instant.now().toEpochMilli());
+				System.out.println("Scheduled " + t.name + " at time " + t.schedule.toString());
+			} catch (IllegalArgumentException e) {
+				System.out.println("Unable to schedule " + t.name + " due to it being in the past. ");
+			}
+		}
+		
+		/*
+		mainTimer.schedule(beforeContestReminder, startDelay - 900000); // 15 minutes = 900 000 ms
+		mainTimer.schedule(beforeContestReminder2, startDelay - 300000);// 5 minutes = 300 000 ms
+		mainTimer.schedule(startContestReminder, startDelay);
+		mainTimer.schedule(assignRoles, startDelay);
+		mainTimer.schedule(thirtyMinutesLeftReminder, endDelay - 1800000); // 30 minues = 1 800 000 ms
+		mainTimer.schedule(contestOverReminder, endDelay);
+		mainTimer.schedule(assignFinishedRoles, endDelay);
+		mainTimer.schedule(removeRoles, endDelay);*/
 	}
 	
 	/**
@@ -388,5 +483,87 @@ class Timeslot {
 		}
 		sb.append(".");
 		return sb.toString();
+	}
+}
+
+abstract class TimerTaskWithSchedule extends TimerTask {
+	protected Timeslot tiedTimeslot;
+	protected String name;
+	protected Instant schedule;
+	public Instant getScheduledTime() {return schedule;}
+	
+}
+
+class ReminderTask extends TimerTaskWithSchedule {
+	private String remindMessage;
+	
+	public ReminderTask(Timeslot t, String remindMessage, String name, Instant schedule) {
+		this.tiedTimeslot = t;
+		this.remindMessage = remindMessage;
+		this.name = name;
+		this.schedule = schedule;
+	}
+	
+	@Override
+	public void run() {
+		System.out.print("Reminder task is running. Printing ");
+		System.out.println(remindMessage);
+		for (User u : tiedTimeslot.getUsers()) {
+			u.openPrivateChannel().complete().sendMessage(remindMessage).queue();
+		}
+	}
+}
+
+class ChannelMessageTask extends TimerTaskWithSchedule {
+	private String message;
+	private long channelId;
+	
+	public ChannelMessageTask(Timeslot t, String m , long c, String name, Instant schedule) {
+		this.tiedTimeslot = t;
+		this.message = m;
+		this.channelId = c;
+		this.name = name;
+		this.schedule = schedule;
+	}
+	
+	public void run() {
+		tiedTimeslot.getContestGuild().getTextChannelById(channelId).sendMessage(message).queue();
+	}
+}
+
+class AssignRolesTask extends TimerTaskWithSchedule {
+	private long roleId;
+	
+	public AssignRolesTask(Timeslot t, long r, String name, Instant schedule) {
+		this.tiedTimeslot = t;
+		this.roleId = r;
+		this.name = name;
+		this.schedule = schedule;
+	}
+
+	@Override
+	public void run() {
+		Role toAdd = this.tiedTimeslot.getContestGuild().getRoleById(roleId);
+		for (User u : tiedTimeslot.getUsers()) {
+			tiedTimeslot.getContestGuild().getController()
+				.addRolesToMember(tiedTimeslot.getContestGuild().getMember(u), toAdd).queue();
+		}
+	}
+}
+
+class RemoveRolesTask extends TimerTaskWithSchedule {
+	public RemoveRolesTask(Timeslot t, String name, Instant schedule) {
+		this.tiedTimeslot = t;
+		this.name = name;
+		this.schedule = schedule;
+	}
+	
+	@Override
+	public void run() {
+		Role toRemove = this.tiedTimeslot.getContestGuild().getRoleById(tiedTimeslot.getRoleId());
+		for (User u : tiedTimeslot.getUsers()) {
+			tiedTimeslot.getContestGuild().getController()
+				.removeRolesFromMember(tiedTimeslot.getContestGuild().getMember(u), toRemove);
+		}
 	}
 }

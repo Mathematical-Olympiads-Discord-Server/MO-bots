@@ -76,7 +76,7 @@ public class SheetsIntegration {
     public static Contest loadContest(String spreadsheetId, CommandEvent event) throws GeneralSecurityException, IOException {
     	final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
     	final String timeslotsRange = "Timeslots!A2:E";
-    	final String generalInfoRange = "Info!A2:G";
+    	final String generalInfoRange = "Info!A2:H";
     	final String usersRange = "Users!A2:C";
     	
     	Sheets service = new Sheets.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
@@ -104,7 +104,9 @@ public class SheetsIntegration {
     				Long.parseLong((String) infoRow.get(3)),
     				Long.parseLong((String) infoRow.get(4)),
     				(String) infoRow.get(5),
-    				Long.parseLong((String) infoRow.get(6)));
+    				Long.parseLong((String) infoRow.get(6)),
+    				Long.parseLong((String) infoRow.get(7)),
+    				event.getGuild());
     				
     		c.setSpreadsheetId(spreadsheetId);
     		for (List<Object> timeslot : timeslots) {
@@ -181,10 +183,11 @@ public class SheetsIntegration {
 					"" + c.getRoleId(),
 					"" + c.getPcbChannelId(),
 					c.getFormLink(),
-					"" + c.getStaffMailId()
+					"" + c.getStaffMailId(),
+					"" + c.getFinishedRoleId()
 				)
 		);
-    	ValueRange infoRange = new ValueRange().setValues(generalInfo).setRange("Info!A2:G");
+    	ValueRange infoRange = new ValueRange().setValues(generalInfo).setRange("Info!A2:H");
     	
     	List<List<Object>> timeslots = c.getTimeslotInfoAsList();
     	ValueRange timeslotsRange = new ValueRange().setValues(timeslots).setRange("Timeslots!A2:D");
