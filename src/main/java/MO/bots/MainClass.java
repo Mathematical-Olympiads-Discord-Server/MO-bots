@@ -39,7 +39,7 @@ public class MainClass {
 		}
 		cms.setToken(token);
 		cms.addEventListener(cmsBuilder.build());
-		cms.addEventListener(new AutoAddContestant());
+		//cms.addEventListener(new AutoAddContestant());
 		cms.build();
 	}
 }

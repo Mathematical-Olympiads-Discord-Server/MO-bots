@@ -377,16 +377,23 @@ class Timeslot {
 		//Set up tasks
 		mainTimer = new Timer();
 		schedule.add(new ReminderTask(this, "15 minutes left before the contest starts. Please head "
-				+ "to the Contest Room VC soon. ", "before contest reminder", this.startTime.minus(Duration.ofMinutes(15))));
+				+ "to the Contest Room VC soon. Please also prepare the following materials: "
+				+ "Blank A4 Paper, Pen, Pencil, Compass and Ruler", 
+				"before contest reminder", this.startTime.minus(Duration.ofMinutes(15))));
 		schedule.add(new ReminderTask(this, "5 minutes left before the contest starts. Please head "
 				+ "to the Contest Room VC soon. ", "before contest reminder 2", this.startTime.minus(Duration.ofMinutes(5))));
-		schedule.add(new ReminderTask(this, "The contest has started - you may now open the image and "
+		schedule.add(new ReminderTask(this, "The contest has started - you may now look at the contest paper and "
 				+ "begin working on the problems. If there is any issue please contact Staff Mail at the "
 				+ "top of the server memberlist. ", "Contest Start Reminder", this.startTime));
 		schedule.add(new ReminderTask(this, "30 minutes left before the contest ends. ", 
 				"30 minutes left reminder", this.endTime.minus(Duration.ofMinutes(30))));
+		schedule.add(new ReminderTask(this, "5 minutes left before the contest ends. Please make sure to "
+				+ "have written the question and page number on each sheet of your contest paper, and "
+				+ "that your User ID/Username is not written anywhere on your contest paper. ", 
+				"5 minutes left reminder", this.endTime.minus(Duration.ofMinutes(5))));
 		schedule.add(new ReminderTask(this, "The contest is over. Please submit your solutions to the form"
-				+ "given in " + formLink + ". Thank you for participating in this contest!", "Contest end reminder",
+				+ "given in " + formLink + ". Thank you for participating in this contest! Further instructions"
+				+ "are pinned in #finished-contestants. ", "Contest end reminder",
 				this.endTime));
 		schedule.add(new AssignRolesTask(this, this.roleId, "Assign Now Competing roles", this.startTime));
 		schedule.add(new AssignRolesTask(this, this.finishedRoleId, "Assign finished roles", this.endTime));
@@ -565,5 +572,24 @@ class RemoveRolesTask extends TimerTaskWithSchedule {
 			tiedTimeslot.getContestGuild().getController()
 				.removeRolesFromMember(tiedTimeslot.getContestGuild().getMember(u), toRemove);
 		}
+	}
+}
+
+class AllowConnectionTask extends TimerTaskWithSchedule {
+	private String roleToAllow;
+	private String vcToAllow;
+	
+	public AllowConnectionTask(Timeslot t, String name, Instant schedule,
+			String role, String vcName) {
+		this.tiedTimeslot = t;
+		this.name = name;
+		this.schedule = schedule;
+		this.roleToAllow = role;
+		this.vcToAllow = vcName;
+	}
+	
+	@Override
+	public void run() {
+		
 	}
 }
