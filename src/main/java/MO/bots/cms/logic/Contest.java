@@ -345,7 +345,11 @@ public class Contest {
 						Instant.now().until(t.getStartInstant(), ChronoUnit.SECONDS) +
 						" seconds, or approximately " + 
 						Instant.now().until(t.getStartInstant(), ChronoUnit.MINUTES) + 
-						" minutes. ");
+						" minutes. (" + 
+						Instant.now().until(t.getStartInstant(), ChronoUnit.HOURS) + 
+					    " hours and " + 
+						(Instant.now().until(t.getStartInstant(), ChronoUnit.MINUTES)%60) + 
+						" minutes)");
 				sb.append("\n");
 						
 						

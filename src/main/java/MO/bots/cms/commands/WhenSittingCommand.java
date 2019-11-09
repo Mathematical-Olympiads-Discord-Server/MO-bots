@@ -12,6 +12,7 @@ public class WhenSittingCommand extends Command {
 		this.aliases = new String[] {"personalinfo"};
 		this.help = "Tells you all the contests you are sitting and when "
 				+ "they are starting. ";
+		this.guildOnly = false;
 	}
 
 	@Override
