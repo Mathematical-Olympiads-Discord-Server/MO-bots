@@ -180,4 +180,18 @@ public class ContestsManager {
 				+ currentContests.get(contestNumber).getSpreadsheetId();
 	}
 
+	/**
+	 * Gets the current schedule for all the contests. 
+	 * @return A string representing the current schedule for
+	 * all the contests. 
+	 */
+	public static String getSchedule() {
+		StringBuilder sb = new StringBuilder();
+		for (Contest c : currentContests) {
+			sb.append(c.getSchedule());
+			sb.append("\n\n");
+		}
+		
+		return sb.toString();
+	}
 }

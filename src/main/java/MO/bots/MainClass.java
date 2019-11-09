@@ -30,7 +30,8 @@ public class MainClass {
 								new NewTimeslotUCommand(),
 								new UpdateContestantsCommand(),
 								new LoadContestCommand(),
-								new SyncCommand());
+								new SyncCommand(),
+								new ScheduledEventsCommand());
 		JDABuilder cms = new JDABuilder(AccountType.BOT);
 		String token = System.getenv("APITOKEN");
 		if (token == null) {

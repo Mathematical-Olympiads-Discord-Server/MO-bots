@@ -12,6 +12,7 @@ import java.util.TimerTask;
 
 import com.jagrosh.jdautilities.command.CommandEvent;
 
+import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageReaction;
@@ -312,6 +313,21 @@ public class Contest {
 			}
 		}
 	}
+
+	/**
+	 * Gets the schedule for this contest. 
+	 * @return
+	 */
+	public String getSchedule() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("Contest " + this.name + ":\n");
+		for (Timeslot t : timeslots) {
+			sb.append(t.getSchedule());
+			sb.append("\n");
+		}
+		
+		return sb.toString();
+	}
 }
 
 class Timeslot {
@@ -352,6 +368,8 @@ class Timeslot {
 	private long finishedRoleId;
 	public long getFinishedRoleId() {return finishedRoleId;}
 	
+	private static final String CONTEST_ROOM_NAME = "Contest Room";
+	
 	/*
 	 * Timers to execute tasks when needed. 
 	 */
@@ -378,7 +396,7 @@ class Timeslot {
 		mainTimer = new Timer();
 		schedule.add(new ReminderTask(this, "15 minutes left before the contest starts. Please head "
 				+ "to the Contest Room VC soon. Please also prepare the following materials: "
-				+ "Blank A4 Paper, Pen, Pencil, Compass and Ruler", 
+				+ "Blank A4 Paper, Pen, Pencil, Compass and Ruler. You can now join Contest Room VC. ", 
 				"before contest reminder", this.startTime.minus(Duration.ofMinutes(15))));
 		schedule.add(new ReminderTask(this, "5 minutes left before the contest starts. Please head "
 				+ "to the Contest Room VC soon. ", "before contest reminder 2", this.startTime.minus(Duration.ofMinutes(5))));
@@ -391,10 +409,14 @@ class Timeslot {
 				+ "have written the question and page number on each sheet of your contest paper, and "
 				+ "that your User ID/Username is not written anywhere on your contest paper. ", 
 				"5 minutes left reminder", this.endTime.minus(Duration.ofMinutes(5))));
-		schedule.add(new ReminderTask(this, "The contest is over. Please submit your solutions to the form"
-				+ "given in " + formLink + ". Thank you for participating in this contest! Further instructions"
-				+ "are pinned in #finished-contestants. ", "Contest end reminder",
+		schedule.add(new ReminderTask(this, "The contest is over. Please submit your solutions to the form "
+				+ "given in " + formLink + ". Thank you for participating in this contest! Further instructions "
+				+ "are available in the form. ", "Contest end reminder",
 				this.endTime));
+		schedule.add(new AllowConnectionTask(this, "Allow participants to join VC", this.startTime.minus(Duration.ofMinutes(15)),
+				this.name, CONTEST_ROOM_NAME));
+		schedule.add(new DisAllowConnectionTask(this, "Remove VC Connection permissions", this.startTime.plus(Duration.ofMinutes(5)),
+				this.name, CONTEST_ROOM_NAME));
 		schedule.add(new AssignRolesTask(this, this.roleId, "Assign Now Competing roles", this.startTime));
 		schedule.add(new AssignRolesTask(this, this.finishedRoleId, "Assign finished roles", this.endTime));
 		schedule.add(new RemoveRolesTask(this, "Remove now competing roles", this.endTime));
@@ -491,6 +513,24 @@ class Timeslot {
 		sb.append(".");
 		return sb.toString();
 	}
+
+	/**
+	 * Gets the current schedule in this timeslot. 
+	 * @return The current schedule in this timeslot. 
+	 */
+	public String getSchedule() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("Timeslot: " + this.name + ":\n");
+		for (TimerTaskWithSchedule t : schedule) {
+			sb.append("Scheduled to ");
+			sb.append(t.name);
+			sb.append(" at ");
+			sb.append(t.schedule.toString());
+			sb.append("\n");
+		}
+		
+		return sb.toString();
+	}
 }
 
 abstract class TimerTaskWithSchedule extends TimerTask {
@@ -576,7 +616,7 @@ class RemoveRolesTask extends TimerTaskWithSchedule {
 }
 
 class AllowConnectionTask extends TimerTaskWithSchedule {
-	private String roleToAllow;
+	private String role;
 	private String vcToAllow;
 	
 	public AllowConnectionTask(Timeslot t, String name, Instant schedule,
@@ -584,12 +624,38 @@ class AllowConnectionTask extends TimerTaskWithSchedule {
 		this.tiedTimeslot = t;
 		this.name = name;
 		this.schedule = schedule;
-		this.roleToAllow = role;
+		this.role = role;
 		this.vcToAllow = vcName;
 	}
 	
 	@Override
 	public void run() {
-		
+		Guild g = this.tiedTimeslot.getContestGuild();
+		Role r = g.getRolesByName(this.role, true).get(0);
+		g.getVoiceChannelsByName(vcToAllow, true).get(0).putPermissionOverride(r).complete()
+			.getManager().grant(Permission.VOICE_CONNECT).deny(Permission.VOICE_SPEAK).queue();
 	}
+}
+
+class DisAllowConnectionTask extends TimerTaskWithSchedule {
+	private String role;
+	private String vcToAllow;
+	
+	public DisAllowConnectionTask (Timeslot t, String name, Instant schedule,
+			String role, String vcName) {
+		this.tiedTimeslot = t;
+		this.name = name;
+		this.schedule = schedule;
+		this.role = role;
+		this.vcToAllow = vcName;
+	}
+	
+	@Override
+	public void run() {
+		Guild g = this.tiedTimeslot.getContestGuild();
+		Role r = g.getRolesByName(this.role, true).get(0);
+		g.getVoiceChannelsByName(vcToAllow, true).get(0).putPermissionOverride(r).complete()
+			.getManager().deny(Permission.VOICE_CONNECT).deny(Permission.VOICE_SPEAK).queue();
+	}
+	
 }
