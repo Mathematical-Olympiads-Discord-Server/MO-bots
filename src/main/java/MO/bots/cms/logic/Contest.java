@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.time.Duration;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -328,6 +329,31 @@ public class Contest {
 		
 		return sb.toString();
 	}
+
+	/**
+	 * Gets information about a particular contestant. 
+	 * @param u The 'User' object representing the contestant to query. 
+	 * @return A string representing all the user's involvements in the current
+	 * contest. 
+	 */
+	public String contestantInfo(User u) {
+		StringBuilder sb = new StringBuilder();
+		for (Timeslot t : timeslots) {
+			if (t.getUsers().contains(u)) {
+				sb.append("Timeslot " + t.getName() + " starting at " + 
+						t.getStartInstant().toString() + " which is in " + 
+						Instant.now().until(t.getStartInstant(), ChronoUnit.SECONDS) +
+						" seconds, or approximately " + 
+						Instant.now().until(t.getStartInstant(), ChronoUnit.MINUTES) + 
+						" minutes. ");
+				sb.append("\n");
+						
+						
+			}
+		}
+		
+		return sb.toString();
+	}
 }
 
 class Timeslot {
@@ -335,6 +361,7 @@ class Timeslot {
 	 * Start time of the contest (UTC)
 	 */
 	private Instant startTime;
+	public Instant getStartInstant() {return this.startTime;}
 	public long getStartLong() {return this.startTime.getEpochSecond();}
 	
 	/**
@@ -531,6 +558,8 @@ class Timeslot {
 		
 		return sb.toString();
 	}
+
+	
 }
 
 abstract class TimerTaskWithSchedule extends TimerTask {

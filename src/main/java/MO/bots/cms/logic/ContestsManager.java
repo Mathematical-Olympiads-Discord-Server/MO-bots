@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.jagrosh.jdautilities.command.CommandEvent;
 
+import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.events.message.react.MessageReactionAddEvent;
 
 public class ContestsManager {
@@ -193,5 +194,30 @@ public class ContestsManager {
 		}
 		
 		return sb.toString();
+	}
+
+	/**
+	 * Gets all the timeslots a user will be sitting. 
+	 * @param u The 'User' object representing the user to query. 
+	 * @return
+	 */
+	public static String userSchedule(User u) {
+		StringBuilder sb = new StringBuilder();
+		String s;
+		for (Contest c : currentContests) {
+			s = c.contestantInfo(u);
+			if (!s.equals("")) {
+				sb.append("Contest ")
+				  .append(c.getName())
+				  .append(":\n")
+				  .append(s)
+				  .append("\n");
+			}
+		}
+		if (!sb.toString().contentEquals("")) {
+			return sb.toString();
+		} else {
+			return "You have not signed up for any timeslots. ";
+		}
 	}
 }

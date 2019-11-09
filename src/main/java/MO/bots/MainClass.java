@@ -24,6 +24,7 @@ public class MainClass {
 		cmsBuilder.useDefaultGame();
 		cmsBuilder.setOwnerId("281300961312374785");
 		cmsBuilder.addCommands(new PingCommand(),
+								new WhenSittingCommand(),
 								new ShowContestsCommand(),
 								new NewContestCommand(),
 								new NewTimeslotCommand(),
