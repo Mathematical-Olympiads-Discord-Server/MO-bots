@@ -643,7 +643,7 @@ class RemoveRolesTask extends TimerTaskWithSchedule {
 		Role toRemove = this.tiedTimeslot.getContestGuild().getRoleById(tiedTimeslot.getRoleId());
 		for (User u : tiedTimeslot.getUsers()) {
 			tiedTimeslot.getContestGuild().getController()
-				.removeRolesFromMember(tiedTimeslot.getContestGuild().getMember(u), toRemove);
+				.removeRolesFromMember(tiedTimeslot.getContestGuild().getMember(u), toRemove).queue();
 		}
 	}
 }
