@@ -399,6 +399,9 @@ class Timeslot {
 	private long finishedRoleId;
 	public long getFinishedRoleId() {return finishedRoleId;}
 	
+	private boolean isCustomTimeslot;
+	public boolean getIsCustomTimeslot() {return isCustomTimeslot;}
+	
 	private static final String CONTEST_ROOM_NAME = "Contest Room";
 	
 	/*
@@ -422,6 +425,7 @@ class Timeslot {
 		this.contestGuild = g;
 		this.roleId = roleId;
 		this.finishedRoleId = finishedRoleId;
+		this.isCustomTimeslot = (reaction == 0) ? true : false;
 		
 		//Set up tasks
 		mainTimer = new Timer();
@@ -444,10 +448,13 @@ class Timeslot {
 				+ "given in " + formLink + ". Thank you for participating in this contest! Further instructions "
 				+ "are available in the form. ", "Contest end reminder",
 				this.endTime));
-		schedule.add(new AllowConnectionTask(this, "Allow participants to join VC", this.startTime.minus(Duration.ofMinutes(15)),
-				this.name, CONTEST_ROOM_NAME));
-		schedule.add(new DisAllowConnectionTask(this, "Remove VC Connection permissions", this.startTime.plus(Duration.ofMinutes(5)),
-				this.name, CONTEST_ROOM_NAME));
+		if (!this.isCustomTimeslot) {
+			schedule.add(new AllowConnectionTask(this, "Allow participants to join VC", this.startTime.minus(Duration.ofMinutes(15)),
+					this.name, CONTEST_ROOM_NAME));
+			schedule.add(new DisAllowConnectionTask(this, "Remove VC Connection permissions", this.startTime.plus(Duration.ofMinutes(5)),
+					this.name, CONTEST_ROOM_NAME));
+			
+		}
 		schedule.add(new AssignRolesTask(this, this.roleId, "Assign Now Competing roles", this.startTime));
 		schedule.add(new AssignRolesTask(this, this.finishedRoleId, "Assign finished roles", this.endTime));
 		schedule.add(new RemoveRolesTask(this, "Remove now competing roles", this.endTime));
