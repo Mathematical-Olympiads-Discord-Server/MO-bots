@@ -7,6 +7,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -319,14 +320,18 @@ public class Contest {
 	 * Gets the schedule for this contest. 
 	 * @return
 	 */
-	public String getSchedule() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("Contest " + this.name + ":\n");
+	public String getSchedule(boolean byTimeslot) {
+		ArrayList<TimerTaskWithSchedule> l = new ArrayList<TimerTaskWithSchedule>(100); //10 slots, 10 per slot
 		for (Timeslot t : timeslots) {
-			sb.append(t.getSchedule());
-			sb.append("\n");
+			l.addAll(t.getSchedule());
 		}
+		if (!byTimeslot) 
+			Collections.sort(l);
 		
+		StringBuilder sb = new StringBuilder(10000);
+		for (TimerTaskWithSchedule t : l) {
+			sb.append(t.getInfo()).append("\n");
+		}
 		return sb.toString();
 	}
 
@@ -556,29 +561,30 @@ class Timeslot {
 	 * Gets the current schedule in this timeslot. 
 	 * @return The current schedule in this timeslot. 
 	 */
-	public String getSchedule() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("Timeslot: " + this.name + ":\n");
-		for (TimerTaskWithSchedule t : schedule) {
-			sb.append("Scheduled to ");
-			sb.append(t.name);
-			sb.append(" at ");
-			sb.append(t.schedule.toString());
-			sb.append("\n");
-		}
-		
-		return sb.toString();
+	public ArrayList<TimerTaskWithSchedule> getSchedule() {
+		return this.schedule;
 	}
 
 	
 }
 
-abstract class TimerTaskWithSchedule extends TimerTask {
+abstract class TimerTaskWithSchedule extends TimerTask implements Comparable<TimerTaskWithSchedule> {
 	protected Timeslot tiedTimeslot;
 	protected String name;
 	protected Instant schedule;
 	public Instant getScheduledTime() {return schedule;}
 	
+	@Override
+	public int compareTo(TimerTaskWithSchedule t) {
+		return this.schedule.compareTo(t.schedule);
+	}
+
+	public String getInfo() {
+		return (this.schedule.compareTo(Instant.now()))>0 ? 
+				this.tiedTimeslot.getName() + ": Scheduled " + this.name + " at " + this.schedule.toString() : 
+				this.tiedTimeslot.getName() + ": Scheduled " + this.name + " in the past. ";
+		
+	}
 }
 
 class ReminderTask extends TimerTaskWithSchedule {
@@ -613,6 +619,7 @@ class ChannelMessageTask extends TimerTaskWithSchedule {
 		this.schedule = schedule;
 	}
 	
+	@Override
 	public void run() {
 		tiedTimeslot.getContestGuild().getTextChannelById(channelId).sendMessage(message).queue();
 	}
@@ -636,6 +643,11 @@ class AssignRolesTask extends TimerTaskWithSchedule {
 				.addRolesToMember(tiedTimeslot.getContestGuild().getMember(u), toAdd).queue();
 		}
 	}
+	
+	@Override
+	public String getInfo() {
+		return super.getInfo().concat(" Role Id: " + this.roleId);
+	}
 }
 
 class RemoveRolesTask extends TimerTaskWithSchedule {
@@ -652,6 +664,11 @@ class RemoveRolesTask extends TimerTaskWithSchedule {
 			tiedTimeslot.getContestGuild().getController()
 				.removeRolesFromMember(tiedTimeslot.getContestGuild().getMember(u), toRemove).queue();
 		}
+	}
+	
+	@Override
+	public String getInfo() {
+		return super.getInfo().concat(" Role Id: " + this.tiedTimeslot.getRoleId());
 	}
 }
 
@@ -674,6 +691,11 @@ class AllowConnectionTask extends TimerTaskWithSchedule {
 		Role r = g.getRolesByName(this.role, true).get(0);
 		g.getVoiceChannelsByName(vcToAllow, true).get(0).putPermissionOverride(r).complete()
 			.getManager().grant(Permission.VOICE_CONNECT).deny(Permission.VOICE_SPEAK).queue();
+	}
+	
+	@Override
+	public String getInfo() {
+		return super.getInfo().concat("Role: " + this.role + " VC: " + this.vcToAllow);
 	}
 }
 
@@ -698,4 +720,8 @@ class DisAllowConnectionTask extends TimerTaskWithSchedule {
 			.getManager().deny(Permission.VOICE_CONNECT).deny(Permission.VOICE_SPEAK).queue();
 	}
 	
+	@Override
+	public String getInfo() {
+		return super.getInfo().concat("Role: " + this.role + " VC: " + this.vcToAllow);
+	}
 }

@@ -12,6 +12,7 @@ public class ScheduledEventsCommand extends Command {
 	public ScheduledEventsCommand() {
 		this.name = "scheduledevents";
 		this.aliases = new String[] {"sched", "events"};
+		this.arguments = "time-sorted or by-timeslot <optional, defaults to time-sorted>";
 		this.help = "Admin command - checks for scheduled events. ";
 	}
 
@@ -23,8 +24,9 @@ public class ScheduledEventsCommand extends Command {
 			event.reply("Error - no permissions");
 			return;
 		}
-
-		for (String s : CommandEvent.splitMessage(ContestsManager.getSchedule())) {
+		boolean byTimeslot = event.getArgs().contentEquals("by-timeslot");
+		
+		for (String s : CommandEvent.splitMessage(ContestsManager.getSchedule(byTimeslot))) {
 			event.reply(s);
 		}
 	}

@@ -186,13 +186,11 @@ public class ContestsManager {
 	 * @return A string representing the current schedule for
 	 * all the contests. 
 	 */
-	public static String getSchedule() {
+	public static String getSchedule(boolean byTimeslot) {
 		StringBuilder sb = new StringBuilder();
 		for (Contest c : currentContests) {
-			sb.append(c.getSchedule());
-			sb.append("\n\n");
+			sb.append(c.getSchedule(byTimeslot)).append("\n").append("\n");
 		}
-		
 		return sb.toString();
 	}
 
