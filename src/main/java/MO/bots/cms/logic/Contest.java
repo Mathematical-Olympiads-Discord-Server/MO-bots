@@ -363,6 +363,15 @@ public class Contest {
 		
 		return sb.toString();
 	}
+
+	/**
+	 * Cancels all tasks scheduled to run. 
+	 */
+	public void cancelSchedule() {
+		for (Timeslot t : timeslots) {
+			t.cancelSchedule();
+		}
+	}
 }
 
 class Timeslot {
@@ -413,6 +422,10 @@ class Timeslot {
 	 * Timers to execute tasks when needed. 
 	 */
 	private Timer mainTimer;
+	/**
+	 * Cancels all scheduled tasks to run. 
+	 */
+	public void cancelSchedule() {mainTimer.cancel();}
 	private ArrayList<TimerTaskWithSchedule> schedule = new ArrayList<TimerTaskWithSchedule>();
 	
 	/**
@@ -565,7 +578,6 @@ class Timeslot {
 		return this.schedule;
 	}
 
-	
 }
 
 abstract class TimerTaskWithSchedule extends TimerTask implements Comparable<TimerTaskWithSchedule> {

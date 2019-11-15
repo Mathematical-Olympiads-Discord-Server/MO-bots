@@ -32,7 +32,8 @@ public class MainClass {
 								new UpdateContestantsCommand(),
 								new LoadContestCommand(),
 								new SyncCommand(),
-								new ScheduledEventsCommand());
+								new ScheduledEventsCommand(),
+								new ReloadContestCommand());
 		JDABuilder cms = new JDABuilder(AccountType.BOT);
 		String token = System.getenv("APITOKEN");
 		if (token == null) {

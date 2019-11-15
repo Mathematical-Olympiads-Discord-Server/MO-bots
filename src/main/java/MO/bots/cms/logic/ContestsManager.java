@@ -1,5 +1,7 @@
 package MO.bots.cms.logic;
 
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 
 import com.jagrosh.jdautilities.command.CommandEvent;
@@ -217,5 +219,22 @@ public class ContestsManager {
 		} else {
 			return "You have not signed up for any timeslots. ";
 		}
+	}
+
+	/**
+	 * Reloads a contest from the Google Sheet. 
+	 * @param pos Position of the contest 
+	 * @param triggerEvent Event that triggered this reload
+	 * @throws GeneralSecurityException 
+	 * @throws IOException
+	 * @throws ArrayIndexOutOfBoundsException if there is no
+	 * contest at that position. 
+	 */
+	public static void reloadContest (int pos, CommandEvent triggerEvent) throws GeneralSecurityException, IOException,
+		ArrayIndexOutOfBoundsException {
+		Contest newContest = SheetsIntegration.loadContest(
+				currentContests.get(pos).getSpreadsheetId(), triggerEvent);
+		currentContests.get(pos).cancelSchedule();
+		currentContests.set(pos, newContest);
 	}
 }
