@@ -237,4 +237,23 @@ public class ContestsManager {
 		currentContests.get(pos).cancelSchedule();
 		currentContests.set(pos, newContest);
 	}
+
+	/**
+	 * Signs up a user for the contest. 
+	 * @param u The User to sign up
+	 * @param contest Name of contest
+	 * @param timeslot Name of timeslot
+	 * @throws IllegalArgumentException if any of the parameters
+	 * do not make sense (i.e. already signed up, no matching contest
+	 * name, etc)
+	 */
+	public static void signupContestant (User u, String contest, String timeslot) throws IllegalArgumentException {
+		for (Contest c : currentContests) {
+			if (c.getName().contentEquals(contest)) {
+				c.signupUser(u, timeslot);
+				return;
+			}
+		}
+		throw new IllegalArgumentException("No contest with that name found. ");
+	}
 }

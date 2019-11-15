@@ -33,7 +33,8 @@ public class MainClass {
 								new LoadContestCommand(),
 								new SyncCommand(),
 								new ScheduledEventsCommand(),
-								new ReloadContestCommand());
+								new ReloadContestCommand(),
+								new SignupCommand());
 		JDABuilder cms = new JDABuilder(AccountType.BOT);
 		String token = System.getenv("CMSAPITOKEN");
 		if (token == null) {

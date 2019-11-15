@@ -363,6 +363,28 @@ public class Contest {
 		
 		return sb.toString();
 	}
+	
+	/**
+	 * Signs up a user for this timeslot. 
+	 * @param u 'User' object representing the user to add. 
+	 * @param timeslot String representing the name of the timeslot. 
+	 * @throws IllegalArgumentException if an illegal argument has been passed in. 
+	 */
+	public void signupUser(User u, String timeslot) throws IllegalArgumentException {
+		//Check that the user is not signed up yet
+		int timeslotPlace = -1;		
+		for (Timeslot t : timeslots) {
+			if (t.getUsers().contains(u)) 
+				throw new IllegalArgumentException("Already signed up for this contest. ");
+			
+			if (t.getName().contentEquals(timeslot)) 
+				timeslotPlace = timeslots.indexOf(t);
+		}
+		if (timeslotPlace == -1) // If timeslotPlace was not changed then the timeslot doesn't exist. 
+			throw new IllegalArgumentException("Timeslot does not exist. ");
+			
+		this.timeslots.get(timeslotPlace).addUser(u);
+	}
 
 	/**
 	 * Cancels all tasks scheduled to run. 
