@@ -35,7 +35,7 @@ public class MainClass {
 								new ScheduledEventsCommand(),
 								new ReloadContestCommand());
 		JDABuilder cms = new JDABuilder(AccountType.BOT);
-		String token = System.getenv("APITOKEN");
+		String token = System.getenv("CMSAPITOKEN");
 		if (token == null) {
 			System.out.print("Input API Token: ");
 			token = sc.nextLine();
