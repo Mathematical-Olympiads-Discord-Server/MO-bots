@@ -4,8 +4,11 @@ import java.util.Scanner;
 
 import javax.security.auth.login.LoginException;
 
+import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.Command.Category;
+import com.jagrosh.jdautilities.command.CommandClient;
 import com.jagrosh.jdautilities.command.CommandClientBuilder;
+import com.jagrosh.jdautilities.command.CommandEvent;
 
 import MO.bots.cms.commands.*;
 import net.dv8tion.jda.core.AccountType;
@@ -39,6 +42,42 @@ public class MainClass {
 								new ReloadContestCommand(),
 								new SignupCommand(),
 								new RemoveRoleCommand());
+		cmsBuilder.setHelpConsumer((CommandEvent event) -> {
+			final String managerRole = "Staff";
+			
+			CommandClient client = event.getClient();
+			
+			if (event.getSelfMember() == null) {	//Check to see if it is in a guild
+				event.reply("Please use this command in a server. ");
+				return;
+			}
+			
+			//Checks whether the author is a staff member or not. 
+			boolean seeStaffCommands = event.getGuild().getMemberById(event.getAuthor().getId())
+					.getRoles().contains(event.getGuild().getRolesByName("Staff", true).get(0));
+			
+			StringBuilder sb = new StringBuilder("**Contest Management System** commands:\n\n");
+			sb.ensureCapacity(2000);
+			if (!seeStaffCommands)
+				sb.append("___Note: only showing non-staff commands___\n");
+			for (Command c : client.getCommands()) {
+				if (c.getRequiredRole() == null) {
+					sb.append("``").append(client.getPrefix()).append(c.getName())
+					.append("``").append(" - ").append(c.getHelp()).append("\n");
+					
+				} else if (c.getRequiredRole().contentEquals(managerRole)) {
+					//This is a staff command - only show to staff members
+					if (seeStaffCommands) {
+						sb.append("``").append(client.getPrefix()).append(c.getName())
+							.append("``").append(" - ").append(c.getHelp()).append("\n");
+					}
+				} else {
+					sb.append("``").append(client.getPrefix()).append(c.getName())
+						.append("``").append(" - ").append(c.getHelp()).append("\n");
+				}
+			}
+			event.getAuthor().openPrivateChannel().complete().sendMessage(sb.toString()).queue();
+		});
 		JDABuilder cms = new JDABuilder(AccountType.BOT);
 		String token = System.getenv("CMSAPITOKEN");
 		if (token == null) {
