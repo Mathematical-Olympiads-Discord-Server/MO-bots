@@ -5,8 +5,6 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 
 import MO.bots.MainClass;
 import MO.bots.cms.logic.ContestsManager;
-import net.dv8tion.jda.core.entities.Member;
-import net.dv8tion.jda.core.entities.Role;
 
 public class ScheduledEventsCommand extends Command {
 

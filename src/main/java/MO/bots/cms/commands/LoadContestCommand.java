@@ -13,8 +13,6 @@ import MO.bots.MainClass;
 import MO.bots.cms.logic.Contest;
 import MO.bots.cms.logic.ContestsManager;
 import MO.bots.cms.logic.SheetsIntegration;
-import net.dv8tion.jda.core.entities.Member;
-import net.dv8tion.jda.core.entities.Role;
 
 /**
  * @author IcosahedralDice
