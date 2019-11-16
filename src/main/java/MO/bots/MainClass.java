@@ -12,6 +12,9 @@ import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDABuilder;
 
 public class MainClass {
+	public static final String managerRole = "Staff";
+	
+	
 	public static Scanner sc = new Scanner(System.in);
 	public static Category[] categories = {new Category("Admin"),
 											new Category("Misc"),

@@ -6,6 +6,7 @@ package MO.bots.cms.commands;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 
+import MO.bots.MainClass;
 import MO.bots.cms.logic.ContestsManager;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Role;
@@ -23,18 +24,13 @@ public class NewTimeslotUCommand extends Command {
 		this.name = "newtimeslotu";
 		this.help = "Admin command. Adds a new timeslot to the contest. Note that the start and"
 				+ "end arguments must be in Unix time. ";
+		this.requiredRole = MainClass.managerRole;
 		this.aliases = new String[] {"addtimeslotu"};
 		this.arguments = "name start end reaction position";
 	}
 
 	@Override
 	protected void execute(CommandEvent event) {
-		Member m = event.getGuild().getMember(event.getAuthor());		
-		Role staff = event.getGuild().getRolesByName("Staff", false).get(0);
-		if (!m.getRoles().contains(staff)) {
-			event.reply("Error - no permissions");
-			return;
-		}
 		
 		try {	
 			String[] args = event.getArgs().split(" ");

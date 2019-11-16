@@ -6,6 +6,7 @@ package MO.bots.cms.commands;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 
+import MO.bots.MainClass;
 import MO.bots.cms.logic.ContestsManager;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Role;
@@ -22,18 +23,13 @@ public class NewContestCommand extends Command {
 	public NewContestCommand() {
 		this.name = "newcontest";
 		this.arguments = "name messageID";
+		this.requiredRole = MainClass.managerRole;
 		this.aliases = new String[] {"new"};
 		this.guildOnly = true;
 	}
 
 	@Override
 	protected void execute(CommandEvent event) {
-		Member m = event.getGuild().getMember(event.getAuthor());		
-		Role staff = event.getGuild().getRolesByName("Staff", false).get(0);
-		if (!m.getRoles().contains(staff)) {
-			event.reply("Error - no permissions");
-			return;
-		}
 		
 		String[] args = event.getArgs().split(" ");
 		long l = 1;

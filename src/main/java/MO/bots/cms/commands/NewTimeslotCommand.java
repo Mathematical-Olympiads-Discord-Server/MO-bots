@@ -6,6 +6,7 @@ package MO.bots.cms.commands;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 
+import MO.bots.MainClass;
 import MO.bots.cms.logic.ContestsManager;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Role;
@@ -23,18 +24,13 @@ public class NewTimeslotCommand extends Command {
 	public NewTimeslotCommand() {
 		this.name = "newtimeslot";
 		this.aliases = new String[] {"addtimeslot"};
+		this.requiredRole = MainClass.managerRole;
 		this.help = "Adds a timeslot. Note start and end have to be YYYY-MM-DDTHH:mm:ssZ, e.g. 2019-11-11T13:00:00Z";
 		this.arguments = "name start end reactionID position<optional>";
 	}
 
 	@Override
 	protected void execute(CommandEvent event) {
-		Member m = event.getGuild().getMember(event.getAuthor());		
-		Role staff = event.getGuild().getRolesByName("Staff", false).get(0);
-		if (!m.getRoles().contains(staff)) {
-			event.reply("Error - no permissions");
-			return;
-		}
 		
 		try {
 			String[] args = event.getArgs().split(" ");
