@@ -384,6 +384,13 @@ public class Contest {
 			throw new IllegalArgumentException("Timeslot does not exist. ");
 			
 		this.timeslots.get(timeslotPlace).addUser(u);
+		try {
+			SheetsIntegration.appendUser(this, u, this.timeslots.get(timeslotPlace).getName());
+		} catch (GeneralSecurityException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
