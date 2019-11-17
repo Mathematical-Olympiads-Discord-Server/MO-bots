@@ -401,6 +401,18 @@ public class Contest {
 			t.cancelSchedule();
 		}
 	}
+	
+	/**
+	 * Gets a List of all users in this timeslot. 
+	 * @return a List<User> comprising all users signed up to this timeslot. 
+	 */
+	public List<User> getUsersAsList() {
+		ArrayList<User> users = new ArrayList<User>(30);
+		for (Timeslot t : timeslots) {
+			users.addAll(t.getUsers());
+		}
+		return users;
+	}
 }
 
 class Timeslot {

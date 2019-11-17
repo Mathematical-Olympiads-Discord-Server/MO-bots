@@ -3,6 +3,7 @@ package MO.bots.cms.logic;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
+import java.util.List;
 
 import com.jagrosh.jdautilities.command.CommandEvent;
 
@@ -255,5 +256,16 @@ public class ContestsManager {
 			}
 		}
 		throw new IllegalArgumentException("No contest with that name found. ");
+	}
+	
+	/**
+	 * Gets a List<User> of all users signed up to this contest. 
+	 * @param pos Position of the contest
+	 * @return
+	 * @throws ArrayIndexOutOfBoundsException if there is no contest at pos. 
+	 */
+	public static List<User> getUsersInContest (int pos) 
+		throws ArrayIndexOutOfBoundsException {
+		return currentContests.get(pos).getUsersAsList();
 	}
 }
