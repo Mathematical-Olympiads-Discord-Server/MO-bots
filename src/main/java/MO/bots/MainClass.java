@@ -41,7 +41,8 @@ public class MainClass {
 								new ScheduledEventsCommand(),
 								new ReloadContestCommand(),
 								new SignupCommand(),
-								new RemoveRoleCommand());
+								new RemoveRoleCommand(),
+								new NotifyAllCommand());
 		cmsBuilder.setHelpConsumer((CommandEvent event) -> {
 			final String managerRole = "Staff";
 			
