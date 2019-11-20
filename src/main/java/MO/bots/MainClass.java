@@ -33,6 +33,7 @@ public class MainClass {
 		cmsBuilder.addCommands(new PingCommand(),
 								new WhenSittingCommand(),
 								new ShowContestsCommand(),
+								new VerifyCommand(),
 								new HomeworkCommand(),
 								new NewContestCommand(),
 								new NewTimeslotCommand(),
@@ -47,7 +48,7 @@ public class MainClass {
 								new NotifyAllCommand(),
 								new PingRoleCommand());
 		cmsBuilder.setHelpConsumer((CommandEvent event) -> {
-			final String managerRole = "Staff";
+			final String managerRole = MainClass.managerRole;
 			
 			CommandClient client = event.getClient();
 			
