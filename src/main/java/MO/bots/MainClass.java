@@ -11,6 +11,7 @@ import com.jagrosh.jdautilities.command.CommandClientBuilder;
 import com.jagrosh.jdautilities.command.CommandEvent;
 
 import MO.bots.cms.commands.*;
+import MO.bots.general.commands.*;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDABuilder;
 
@@ -32,6 +33,7 @@ public class MainClass {
 		cmsBuilder.addCommands(new PingCommand(),
 								new WhenSittingCommand(),
 								new ShowContestsCommand(),
+								new HomeworkCommand(),
 								new NewContestCommand(),
 								new NewTimeslotCommand(),
 								new NewTimeslotUCommand(),
