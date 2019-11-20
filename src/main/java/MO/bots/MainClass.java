@@ -42,7 +42,8 @@ public class MainClass {
 								new ReloadContestCommand(),
 								new SignupCommand(),
 								new RemoveRoleCommand(),
-								new NotifyAllCommand());
+								new NotifyAllCommand(),
+								new PingRoleCommand());
 		cmsBuilder.setHelpConsumer((CommandEvent event) -> {
 			final String managerRole = "Staff";
 			
