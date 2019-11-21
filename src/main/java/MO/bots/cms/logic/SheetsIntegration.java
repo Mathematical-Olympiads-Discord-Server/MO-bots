@@ -209,4 +209,27 @@ public class SheetsIntegration {
     			.batchUpdate(c.getSpreadsheetId(), req).execute();
     	System.out.printf("%d cells updated.", response.getTotalUpdatedCells());
     }
+
+    /**
+     * Appends a row to the end of the spreadsheet with the 
+     * specified ID. 
+     * @param spreadsheetId 
+     * @param row row of objects to add
+     * @param sheet sheet name
+     * @throws IOException 
+     * @throws GeneralSecurityException 
+     */
+    public static void appendRow(String spreadsheetId, List<Object> row, String sheet) throws GeneralSecurityException, IOException {
+    	final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
+    	Sheets service = new Sheets.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
+    			.setApplicationName(APPLICATION_NAME).build();
+    	final String appendRange = sheet + "!A1";
+    	
+    	List<List<Object>> values= Arrays.asList(row);
+    	ValueRange body = new ValueRange().setValues(values);
+    	AppendValuesResponse result = service.spreadsheets().values()
+    			.append(spreadsheetId, appendRange, body)
+    			.setValueInputOption("USER_ENTERED").execute();
+    	System.out.printf("%d cells updated.", result.getUpdates().getUpdatedCells());
+    }
 }

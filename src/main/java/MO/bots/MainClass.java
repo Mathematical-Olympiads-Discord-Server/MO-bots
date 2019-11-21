@@ -46,7 +46,8 @@ public class MainClass {
 								new SignupCommand(),
 								new RemoveRoleCommand(),
 								new NotifyAllCommand(),
-								new PingRoleCommand());
+								new PingRoleCommand(),
+								new RecordStatsCommand());
 		cmsBuilder.setHelpConsumer((CommandEvent event) -> {
 			final String managerRole = MainClass.managerRole;
 			
