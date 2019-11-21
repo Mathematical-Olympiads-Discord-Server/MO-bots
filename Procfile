@@ -1,1 +1,1 @@
-worker: java -jar build/libs/MO-bots.jar
+worker: java -cp build/libs/MO-bots.jar MO.bots.MainClass
