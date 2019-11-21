@@ -1,5 +1,6 @@
 package MO.bots.cms.logic;
 
+import java.io.ByteArrayInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -37,6 +38,7 @@ public class SheetsIntegration {
 	
 	private static final List<String> SCOPES = Collections.singletonList(SheetsScopes.SPREADSHEETS);
 	private static final String CREDENTIALS_FILE_PATH = "/credentials.json";
+	private static final String CREDENTIALS_ENVIRONMENT_VARIABLE = "MO-bots-sheets-cred";
 	
 	private static final String INFO_SHEET_NAME = "[BOT] Info";
 	private static final String TIMESLOTS_SHEET_NAME = "[BOT] Timeslots";
@@ -50,10 +52,16 @@ public class SheetsIntegration {
      */
     private static Credential getCredentials(final NetHttpTransport HTTP_TRANSPORT) throws IOException {
         // Load client secrets.
-        InputStream in = SheetsIntegration.class.getResourceAsStream(CREDENTIALS_FILE_PATH);
-        if (in == null) {
-            throw new FileNotFoundException("Resource not found: " + CREDENTIALS_FILE_PATH);
-        }
+    	InputStream in;
+    	String cred = System.getenv(CREDENTIALS_ENVIRONMENT_VARIABLE);
+    	if (cred == null) {
+            in = SheetsIntegration.class.getResourceAsStream(CREDENTIALS_FILE_PATH);
+            if (in == null) {
+                throw new FileNotFoundException("Resource not found: " + CREDENTIALS_FILE_PATH);
+            }	
+    	} else {
+    		in = new ByteArrayInputStream(cred.getBytes());
+    	}
         GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(in));
 
         // Build flow and trigger user authorization request.
