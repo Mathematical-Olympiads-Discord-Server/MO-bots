@@ -1,1 +1,1 @@
-worker: java -jar MO-bots.jar
+worker: java -jar ./build/libs/MO-bots-all.jar
