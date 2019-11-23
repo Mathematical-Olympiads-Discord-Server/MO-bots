@@ -12,6 +12,7 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 
 import MO.bots.cms.commands.*;
 import MO.bots.general.commands.*;
+import MO.bots.general.sampling.SampleManager;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDABuilder;
 
@@ -25,7 +26,10 @@ public class MainClass {
 											new Category("User help")
 	};
 	
+	public static SampleManager sm;
+	
 	public static void main (String[] args) throws LoginException {
+		sm = new SampleManager();
 		CommandClientBuilder cmsBuilder = new CommandClientBuilder();
 		cmsBuilder.setPrefix("+");
 		cmsBuilder.useDefaultGame();
@@ -47,7 +51,8 @@ public class MainClass {
 								new RemoveRoleCommand(),
 								new NotifyAllCommand(),
 								new PingRoleCommand(),
-								new RecordStatsCommand());
+								new RecordStatsCommand(),
+								new SampleCommand());
 		cmsBuilder.setHelpConsumer((CommandEvent event) -> {
 			final String managerRole = MainClass.managerRole;
 			
@@ -92,6 +97,7 @@ public class MainClass {
 		}
 		cms.setToken(token);
 		cms.addEventListener(cmsBuilder.build());
+		cms.addEventListener(sm);
 		//cms.addEventListener(new AutoAddContestant());
 		cms.build();
 	}
