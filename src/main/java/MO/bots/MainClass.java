@@ -17,7 +17,7 @@ import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDABuilder;
 
 public class MainClass {
-	public static final String managerRole = "Staff";
+	public static final String managerRole = "CMS-Authorised";
 	
 	
 	public static Scanner sc = new Scanner(System.in);
