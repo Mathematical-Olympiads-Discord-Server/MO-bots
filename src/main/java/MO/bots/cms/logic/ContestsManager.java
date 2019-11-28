@@ -268,4 +268,13 @@ public class ContestsManager {
 		throws ArrayIndexOutOfBoundsException {
 		return currentContests.get(pos).getUsersAsList();
 	}
+
+	/**
+	 * Removes a contest from the list. 
+	 * @param pos position
+	 */
+	public static void removeContest (int pos) {
+		currentContests.get(pos).cancelSchedule();
+		currentContests.remove(pos);
+	}
 }

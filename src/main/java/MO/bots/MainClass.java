@@ -52,7 +52,8 @@ public class MainClass {
 								new NotifyAllCommand(),
 								new PingRoleCommand(),
 								new RecordStatsCommand(),
-								new SampleCommand());
+								new SampleCommand(),
+								new RemoveContestCommand()););
 		cmsBuilder.setHelpConsumer((CommandEvent event) -> {
 			final String managerRole = MainClass.managerRole;
 			
