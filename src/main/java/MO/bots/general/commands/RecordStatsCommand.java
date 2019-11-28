@@ -69,6 +69,12 @@ public class RecordStatsCommand extends Command {
 			event.reply(sb.toString());
 		} catch (Exception e) {
 			event.reply("Something went wrong...");
+			StringBuilder sb = new StringBuilder();
+			sb.append(e.getMessage());
+			for (StackTraceElement ste : e.getStackTrace()) {
+				sb.append(ste.toString()).append("\n");
+			}
+			event.reply(sb.toString());
 		}
 	}
 }

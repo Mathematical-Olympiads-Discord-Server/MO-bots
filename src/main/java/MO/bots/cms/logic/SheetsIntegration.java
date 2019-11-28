@@ -16,6 +16,7 @@ import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInsta
 import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
+import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
@@ -53,25 +54,21 @@ public class SheetsIntegration {
     private static Credential getCredentials(final NetHttpTransport HTTP_TRANSPORT) throws IOException {
         // Load client secrets.
     	InputStream in;
-    	String cred = System.getenv(CREDENTIALS_ENVIRONMENT_VARIABLE);
-    	if (cred == null) {
+    	String cred1 = System.getenv(CREDENTIALS_ENVIRONMENT_VARIABLE + "-1");
+    	String cred2 = System.getenv(CREDENTIALS_ENVIRONMENT_VARIABLE + "-2");
+    	if (cred1 == null || cred2 == null) {
             in = SheetsIntegration.class.getResourceAsStream(CREDENTIALS_FILE_PATH);
             if (in == null) {
                 throw new FileNotFoundException("Resource not found: " + CREDENTIALS_FILE_PATH);
             }	
     	} else {
-    		in = new ByteArrayInputStream(cred.getBytes());
+    		in = new ByteArrayInputStream((cred1+cred2).getBytes());
     	}
-        GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(in));
-
-        // Build flow and trigger user authorization request.
-        GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
-                HTTP_TRANSPORT, JSON_FACTORY, clientSecrets, SCOPES)
-                .setDataStoreFactory(new FileDataStoreFactory(new java.io.File(TOKENS_DIRECTORY_PATH)))
-                .setAccessType("offline")
-                .build();
-        LocalServerReceiver receiver = new LocalServerReceiver.Builder().setPort(8888).build();
-        return new AuthorizationCodeInstalledApp(flow, receiver).authorize("user");
+    	
+    	GoogleCredential credential = GoogleCredential.fromStream(in)
+    			.createScoped(SCOPES);
+        
+        return credential;
     }
     
     /**
@@ -235,6 +232,51 @@ public class SheetsIntegration {
     	
     	List<List<Object>> values= Arrays.asList(row);
     	ValueRange body = new ValueRange().setValues(values);
+    	AppendValuesResponse result = service.spreadsheets().values()
+    			.append(spreadsheetId, appendRange, body)
+    			.setValueInputOption("USER_ENTERED").execute();
+    	System.out.printf("%d cells updated.", result.getUpdates().getUpdatedCells());
+    }
+
+    /**
+     * Gets a range from a sheet
+     * @param spreadsheetId
+     * @param sheetName
+     * @param range
+     * @return
+     * @throws GeneralSecurityException
+     * @throws IOException
+     */
+    public static List<List<Object>> getSheet(String spreadsheetId, String sheetName, String range) 
+    		throws GeneralSecurityException, IOException {
+    	final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
+    	
+    	Sheets service = new Sheets.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
+    			.setApplicationName(APPLICATION_NAME).build();
+    	
+    	
+    	ValueRange dataRange = service.spreadsheets().values()
+    			.get(spreadsheetId, range).execute();
+    	return dataRange.getValues();
+    }
+    
+    /**
+     * Writes some data to a sheet
+     * @param spreadsheetId
+     * @param sheetName
+     * @param range
+     * @param data
+     * @throws GeneralSecurityException
+     * @throws IOException
+     */
+    public static void appendRange (String spreadsheetId, String sheetName, List<List<Object>> data)
+    		throws GeneralSecurityException, IOException { 
+    	final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
+    	Sheets service = new Sheets.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
+    			.setApplicationName(APPLICATION_NAME).build();
+    	final String appendRange = sheetName + "!A1";
+    	
+    	ValueRange body = new ValueRange().setValues(data);
     	AppendValuesResponse result = service.spreadsheets().values()
     			.append(spreadsheetId, appendRange, body)
     			.setValueInputOption("USER_ENTERED").execute();
