@@ -18,7 +18,7 @@ import MO.bots.cms.logic.SheetsIntegration;
  * @author IcosahedralDice
  *
  */
-public class LoadContestCommand extends Command {
+public class LoadContestCommand extends CommandWithLogging {
 
 	/**
 	 * 
@@ -32,7 +32,7 @@ public class LoadContestCommand extends Command {
 	}
 
 	@Override
-	protected void execute(CommandEvent event) {
+	protected void exec(CommandEvent event) {
 		try {
 			Contest c = SheetsIntegration.loadContest(event.getArgs().split(" ")[0], event);
 			ContestsManager.addNewContest(c);

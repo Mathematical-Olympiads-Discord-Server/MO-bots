@@ -14,7 +14,7 @@ import MO.bots.cms.logic.ContestsManager;
  * @author IcosahedralDice
  *
  */
-public class NewTimeslotCommand extends Command {
+public class NewTimeslotCommand extends CommandWithLogging {
 
 	/**
 	 * 
@@ -28,7 +28,7 @@ public class NewTimeslotCommand extends Command {
 	}
 
 	@Override
-	protected void execute(CommandEvent event) {
+	protected void exec(CommandEvent event) {
 		
 		try {
 			String[] args = event.getArgs().split(" ");

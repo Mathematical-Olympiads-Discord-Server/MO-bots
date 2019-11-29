@@ -10,7 +10,7 @@ import MO.bots.cms.logic.ContestsManager;
 import net.dv8tion.jda.core.entities.PrivateChannel;
 import net.dv8tion.jda.core.entities.User;
 
-public class NotifyAllCommand extends Command {
+public class NotifyAllCommand extends CommandWithLogging {
 
 	public NotifyAllCommand() {
 		this.name = "notifyall";
@@ -21,7 +21,7 @@ public class NotifyAllCommand extends Command {
 	}
 
 	@Override
-	protected void execute(CommandEvent event) {
+	protected void exec(CommandEvent event) {
 		int position = 0;
 		try {
 			position = Integer.parseInt(event.getArgs().split(" ")[0]);

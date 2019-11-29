@@ -6,7 +6,7 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 import MO.bots.MainClass;
 import net.dv8tion.jda.core.entities.Role;
 
-public class PingRoleCommand extends Command {
+public class PingRoleCommand extends CommandWithLogging {
 
 	public PingRoleCommand() {
 		this.requiredRole = MainClass.managerRole;
@@ -15,7 +15,7 @@ public class PingRoleCommand extends Command {
 	}
 
 	@Override
-	protected void execute(CommandEvent event) {
+	protected void exec(CommandEvent event) {
 		Role r = event.getGuild().getRoleById(Long.parseLong(event.getArgs()));
 		if (r == null) {
 			event.reply("No role with that id");

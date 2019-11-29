@@ -6,7 +6,7 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 import MO.bots.MainClass;
 import MO.bots.cms.logic.ContestsManager;
 
-public class ScheduledEventsCommand extends Command {
+public class ScheduledEventsCommand extends CommandWithLogging {
 
 	public ScheduledEventsCommand() {
 		this.name = "scheduledevents";
@@ -17,7 +17,7 @@ public class ScheduledEventsCommand extends Command {
 	}
 
 	@Override
-	protected void execute(CommandEvent event) {
+	protected void exec(CommandEvent event) {
 		boolean byTimeslot = event.getArgs().contentEquals("by-timeslot");
 		
 		for (String s : CommandEvent.splitMessage(ContestsManager.getSchedule(byTimeslot))) {

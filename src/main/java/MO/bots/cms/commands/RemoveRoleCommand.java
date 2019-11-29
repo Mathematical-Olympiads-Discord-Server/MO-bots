@@ -9,7 +9,7 @@ import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Role;
 import net.dv8tion.jda.core.utils.tuple.ImmutablePair;
 
-public class RemoveRoleCommand extends Command {
+public class RemoveRoleCommand extends CommandWithLogging {
 
 	private static ArrayList<ImmutablePair<String, Long[]>> shortcuts = null;
 	
@@ -47,7 +47,7 @@ public class RemoveRoleCommand extends Command {
 	}
 
 	@Override
-	protected void execute(CommandEvent event) {
+	protected void exec(CommandEvent event) {
 		//Check whether this is a "shortcut"
 		for (ImmutablePair<String, Long[]> p : shortcuts) {
 			if (p.left.equals(event.getArgs())) {

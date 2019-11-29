@@ -13,7 +13,7 @@ import MO.bots.cms.logic.ContestsManager;
  * @author IcosahedralDice
  *
  */
-public class NewContestCommand extends Command {
+public class NewContestCommand extends CommandWithLogging {
 
 	/**
 	 * 
@@ -27,7 +27,7 @@ public class NewContestCommand extends Command {
 	}
 
 	@Override
-	protected void execute(CommandEvent event) {
+	protected void exec(CommandEvent event) {
 		
 		String[] args = event.getArgs().split(" ");
 		long l = 1;

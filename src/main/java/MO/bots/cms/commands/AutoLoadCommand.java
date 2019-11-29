@@ -1,8 +1,5 @@
 package MO.bots.cms.commands;
 
-import java.io.IOException;
-import java.security.GeneralSecurityException;
-
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 
@@ -11,7 +8,7 @@ import MO.bots.cms.logic.Contest;
 import MO.bots.cms.logic.ContestsManager;
 import MO.bots.cms.logic.SheetsIntegration;
 
-public class AutoLoadCommand extends Command {
+public class AutoLoadCommand extends CommandWithLogging {
 
 	public AutoLoadCommand() {
 		this.name = "autoload";
@@ -21,7 +18,7 @@ public class AutoLoadCommand extends Command {
 	}
 
 	@Override
-	protected void execute(CommandEvent event) {
+	protected void exec(CommandEvent event) {
 		String s = System.getenv("MO-bots-load-sheets");
 		if (s == null) {
 			event.reply("No sheets to load");

@@ -13,7 +13,7 @@ import MO.bots.cms.logic.ContestsManager;
  * @author IcosahedralDice
  *
  */
-public class UpdateContestantsCommand extends Command {
+public class UpdateContestantsCommand extends CommandWithLogging {
 
 	/**
 	 * 
@@ -27,7 +27,7 @@ public class UpdateContestantsCommand extends Command {
 	}
 
 	@Override
-	protected void execute(CommandEvent event) {
+	protected void exec(CommandEvent event) {
 		if (event.getArgs().contentEquals("")) {
 			//No arguments provided
 			event.reply(ContestsManager.updateContestants(0, event));

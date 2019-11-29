@@ -5,7 +5,7 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 
 import MO.bots.cms.logic.ContestsManager;
 
-public class CancelCommand extends Command {
+public class CancelCommand extends CommandWithLogging {
 
 	public CancelCommand() {
 		this.name = "cancel";
@@ -20,7 +20,7 @@ public class CancelCommand extends Command {
 	}
 
 	@Override
-	protected void execute(CommandEvent event) {
+	protected void exec(CommandEvent event) {
 		try {
 			ContestsManager.removeContestant(event.getAuthor(), event.getArgs().split(" ")[0], event.getArgs().split(" ")[1]);
 		} catch (IndexOutOfBoundsException e) {

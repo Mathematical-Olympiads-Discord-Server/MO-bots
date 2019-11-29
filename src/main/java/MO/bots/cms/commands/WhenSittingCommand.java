@@ -5,7 +5,7 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 
 import MO.bots.cms.logic.ContestsManager;
 
-public class WhenSittingCommand extends Command {
+public class WhenSittingCommand extends CommandWithLogging {
 
 	public WhenSittingCommand() {
 		this.name = "when";
@@ -16,7 +16,7 @@ public class WhenSittingCommand extends Command {
 	}
 
 	@Override
-	protected void execute(CommandEvent event) {
+	protected void exec(CommandEvent event) {
 		event.reply(ContestsManager.userSchedule(event.getAuthor()));
 
 	}

@@ -13,7 +13,7 @@ import MO.bots.cms.logic.ContestsManager;
  * @author IcosahedralDice
  *
  */
-public class SyncCommand extends Command {
+public class SyncCommand extends CommandWithLogging {
 
 	/**
 	 * 
@@ -26,7 +26,7 @@ public class SyncCommand extends Command {
 	}
 
 	@Override
-	protected void execute(CommandEvent event) {
+	protected void exec(CommandEvent event) {
 		String s = ContestsManager.sync(event);
 		event.reply(s);
 	}

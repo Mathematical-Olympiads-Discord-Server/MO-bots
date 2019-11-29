@@ -9,7 +9,7 @@ import MO.bots.cms.logic.ContestsManager;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Role;
 
-public class SignupCommand extends Command {
+public class SignupCommand extends CommandWithLogging {
 
 	public SignupCommand() {
 		this.name = "signup";
@@ -18,7 +18,7 @@ public class SignupCommand extends Command {
 	}
 
 	@Override
-	protected void execute(CommandEvent event) {
+	protected void exec(CommandEvent event) {
 		String[] args = event.getArgs().split(" ");
 		try {
 			ContestsManager.signupContestant(event.getAuthor(), args[0], args[1]);

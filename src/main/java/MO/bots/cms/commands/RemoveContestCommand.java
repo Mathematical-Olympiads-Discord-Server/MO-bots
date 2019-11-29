@@ -6,7 +6,7 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 import MO.bots.MainClass;
 import MO.bots.cms.logic.ContestsManager;
 
-public class RemoveContestCommand extends Command {
+public class RemoveContestCommand extends CommandWithLogging {
 
 	public RemoveContestCommand() {
 		this.name = "remove";
@@ -16,7 +16,7 @@ public class RemoveContestCommand extends Command {
 	}
 
 	@Override
-	protected void execute(CommandEvent event) {
+	protected void exec(CommandEvent event) {
 		try {
 			ContestsManager.removeContest(Integer.parseInt(event.getArgs()));
 		} catch (NumberFormatException e ) {

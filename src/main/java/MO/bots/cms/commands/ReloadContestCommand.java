@@ -6,7 +6,7 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 import MO.bots.MainClass;
 import MO.bots.cms.logic.ContestsManager;
 
-public class ReloadContestCommand extends Command {
+public class ReloadContestCommand extends CommandWithLogging {
 
 	public ReloadContestCommand() {
 		this.name = "reload";
@@ -18,7 +18,7 @@ public class ReloadContestCommand extends Command {
 	}
 
 	@Override
-	protected void execute(CommandEvent event) {
+	protected void exec(CommandEvent event) {
 		try {
 			if (event.getArgs().contentEquals("")) {
 				ContestsManager.reloadContest(0, event);

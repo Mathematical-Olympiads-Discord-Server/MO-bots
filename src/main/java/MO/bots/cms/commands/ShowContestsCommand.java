@@ -12,7 +12,7 @@ import MO.bots.cms.logic.ContestsManager;
  * @author IcosahedralDice
  *
  */
-public class ShowContestsCommand extends Command {
+public class ShowContestsCommand extends CommandWithLogging {
 
 	/**
 	 * 
@@ -26,7 +26,7 @@ public class ShowContestsCommand extends Command {
 	}
 
 	@Override
-	protected void execute(CommandEvent event) {
+	protected void exec(CommandEvent event) {
 		try {
 			int level = Integer.parseInt(event.getArgs());
 			event.reply(ContestsManager.showContests(level));
