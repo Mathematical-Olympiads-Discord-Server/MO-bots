@@ -25,8 +25,11 @@ import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.SheetsScopes;
 import com.google.api.services.sheets.v4.model.AppendValuesResponse;
+import com.google.api.services.sheets.v4.model.BatchClearValuesRequest;
 import com.google.api.services.sheets.v4.model.BatchUpdateValuesRequest;
 import com.google.api.services.sheets.v4.model.BatchUpdateValuesResponse;
+import com.google.api.services.sheets.v4.model.ClearValuesRequest;
+import com.google.api.services.sheets.v4.model.ClearValuesResponse;
 import com.google.api.services.sheets.v4.model.ValueRange;
 import com.jagrosh.jdautilities.command.CommandEvent;
 
@@ -43,7 +46,7 @@ public class SheetsIntegration {
 	
 	private static final String INFO_SHEET_NAME = "[BOT] Info";
 	private static final String TIMESLOTS_SHEET_NAME = "[BOT] Timeslots";
-	private static final String USERS_SHEET_NAME = "[BOT] Users";
+	public static final String USERS_SHEET_NAME = "[BOT] Users";
 	
     /**
      * Creates an authorized Credential object.
@@ -208,13 +211,21 @@ public class SheetsIntegration {
     	data.add(timeslotsRange);
     	data.add(usersRange);
     	
+    	service.spreadsheets().values().clear(c.getSpreadsheetId(), 
+    			INFO_SHEET_NAME + "!A2:H", new ClearValuesRequest()).execute();
+    	service.spreadsheets().values().clear(c.getSpreadsheetId(), 
+    			TIMESLOTS_SHEET_NAME + "!A2:D", new ClearValuesRequest()).execute();
+    	service.spreadsheets().values().clear(c.getSpreadsheetId(), 
+    			USERS_SHEET_NAME + "!A2:C", new ClearValuesRequest()).execute();
+    	
     	BatchUpdateValuesRequest req = new BatchUpdateValuesRequest()
     			.setValueInputOption("USER_ENTERED").setData(data);
     	BatchUpdateValuesResponse response = service.spreadsheets().values()
     			.batchUpdate(c.getSpreadsheetId(), req).execute();
-    	System.out.printf("%d cells updated.", response.getTotalUpdatedCells());
+    	System.out.printf("%d cells updated.\n", response.getTotalUpdatedCells());
     }
-
+    
+    
     /**
      * Appends a row to the end of the spreadsheet with the 
      * specified ID. 

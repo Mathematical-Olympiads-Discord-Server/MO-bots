@@ -258,6 +258,16 @@ public class ContestsManager {
 		throw new IllegalArgumentException("No contest with that name found. ");
 	}
 	
+	public static void removeContestant (User u, String contest, String timeslot) {
+		for (Contest c : currentContests) {
+			if (c.getName().contentEquals(contest)) {
+				c.removeUser(u, timeslot);
+				return;
+			}
+		}
+		throw new IllegalArgumentException("No contest with that name found. ");
+	}
+	
 	/**
 	 * Gets a List<User> of all users signed up to this contest. 
 	 * @param pos Position of the contest

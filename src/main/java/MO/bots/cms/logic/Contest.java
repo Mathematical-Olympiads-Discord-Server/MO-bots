@@ -394,6 +394,34 @@ public class Contest {
 	}
 
 	/**
+	 * Removes a user from this contest. 
+	 * @param u User to remove
+	 * @param timeslot Timeslot to remove from
+	 * @throws IllegalArgumentException if any of the paramters are wrong. 
+	 * Given in a format suitable for user output. 
+	 */
+	public void removeUser(User u, String timeslot) throws IllegalArgumentException {
+		for (Timeslot t : timeslots) {
+			if (t.getName().contentEquals(timeslot)) {
+				if (t.getUsers().contains(u)) {
+					t.removeUser(u);
+					//Re-write
+					try {
+						SheetsIntegration.saveContest(this);
+						return;
+					} catch (IOException e) {
+						e.printStackTrace();
+						return;
+					}
+				} else {
+					throw new IllegalArgumentException("You were never signed up for this timeslot. ");
+				}
+			}
+		}
+		throw new IllegalArgumentException("No timeslot with this name exists. ");
+	}
+	
+	/**
 	 * Cancels all tasks scheduled to run. 
 	 */
 	public void cancelSchedule() {
@@ -619,6 +647,9 @@ class Timeslot {
 		return this.schedule;
 	}
 
+	public void removeUser (User u) {
+		this.users.remove(u);
+	}
 }
 
 abstract class TimerTaskWithSchedule extends TimerTask implements Comparable<TimerTaskWithSchedule> {

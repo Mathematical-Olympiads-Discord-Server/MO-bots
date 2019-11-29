@@ -26,7 +26,7 @@ public class SignupCommand extends Command {
 			//Assign roles
 			Member contestant = event.getGuild().getMember(event.getAuthor());
 			List<Role> timeslotRoles = event.getGuild().getRolesByName(args[1], true);
-			if (!timeslotRoles.isEmpty()) {	//No role matches the timeslot. 
+			if (timeslotRoles.isEmpty()) {	//No role matches the timeslot. 
 				event.reply("Signup complete but role could not be assigned. ");
 				System.out.println("No role with name " + args[1]);
 				return;

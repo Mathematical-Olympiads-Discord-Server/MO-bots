@@ -36,6 +36,8 @@ public class MainClass {
 		cmsBuilder.setOwnerId("281300961312374785");
 		cmsBuilder.addCommands(new PingCommand(),
 								new WhenSittingCommand(),
+								new SignupCommand(),
+								new CancelCommand(),
 								new ShowContestsCommand(),
 								new VerifyCommand(),
 								new HomeworkCommand(),
@@ -47,7 +49,6 @@ public class MainClass {
 								new SyncCommand(),
 								new ScheduledEventsCommand(),
 								new ReloadContestCommand(),
-								new SignupCommand(),
 								new RemoveRoleCommand(),
 								new NotifyAllCommand(),
 								new PingRoleCommand(),
