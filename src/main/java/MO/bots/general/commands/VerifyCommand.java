@@ -24,6 +24,8 @@ public class VerifyCommand extends Command{
 			pc.sendMessage("Thanks! You have been verified").queue();
 		});
 		System.out.println("Verified " + event.getAuthor().getName() + " at " + Instant.now().toString());
+		event.getGuild().getTextChannelsByName("lounge", true).get(0)
+			.sendMessage("Hello and welcome " + event.getAuthor().getAsMention());
 	}
 
 }
