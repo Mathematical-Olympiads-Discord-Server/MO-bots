@@ -216,7 +216,7 @@ public class ContestsManager {
 			}
 		}
 		if (!sb.toString().contentEquals(startString)) {
-			return sb.toString();
+			return sb.append("```").toString();
 		} else {
 			return "You have not signed up for any timeslots. ";
 		}
