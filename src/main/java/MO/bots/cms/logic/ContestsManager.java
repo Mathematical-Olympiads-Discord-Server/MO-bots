@@ -255,7 +255,13 @@ public class ContestsManager {
 				return;
 			}
 		}
-		throw new IllegalArgumentException("No contest with that name found. ");
+		StringBuilder exceptionString = new StringBuilder();
+		exceptionString.append("No contest with that name found. Active contests: ```");
+		for (Contest c : currentContests) {
+			exceptionString.append(c.getName()).append("\n");
+		}
+		exceptionString.append("```");
+		throw new IllegalArgumentException(exceptionString.toString());
 	}
 	
 	public static void removeContestant (User u, String contest, String timeslot) {

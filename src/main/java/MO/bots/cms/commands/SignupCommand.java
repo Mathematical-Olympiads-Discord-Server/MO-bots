@@ -20,6 +20,11 @@ public class SignupCommand extends CommandWithLogging {
 	@Override
 	protected void exec(CommandEvent event) {
 		String[] args = event.getArgs().split(" ");
+		if (args.length == 0)
+			args = new String[] {"", ""};
+		if (args.length == 1)
+			args = new String[] {args[0], ""};
+		
 		try {
 			ContestsManager.signupContestant(event.getAuthor(), args[0], args[1]);
 			event.reply("Done. Use +when to check your current signups. ");

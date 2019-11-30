@@ -380,9 +380,18 @@ public class Contest {
 			if (t.getName().contentEquals(timeslot)) 
 				timeslotPlace = timeslots.indexOf(t);
 		}
-		if (timeslotPlace == -1) // If timeslotPlace was not changed then the timeslot doesn't exist. 
-			throw new IllegalArgumentException("Timeslot does not exist. ");
-			
+		
+		if (timeslotPlace == -1) { // If timeslotPlace was not changed then the timeslot doesn't exist. 
+			StringBuilder exceptionString = new StringBuilder();
+			exceptionString.append("Timeslot does not exist. Available timeslots: ```");
+			for (Timeslot t: timeslots) {
+				exceptionString.append(t.getName()).append(" starting at ")
+					.append(t.getStartInstant().toString()).append("\n");
+			}
+			exceptionString.append("```");
+			throw new IllegalArgumentException(exceptionString.toString());
+		}
+		
 		this.timeslots.get(timeslotPlace).addUser(u);
 		try {
 			SheetsIntegration.appendUser(this, u, this.timeslots.get(timeslotPlace).getName());
