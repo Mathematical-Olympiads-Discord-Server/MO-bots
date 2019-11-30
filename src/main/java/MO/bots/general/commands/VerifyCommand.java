@@ -28,7 +28,9 @@ public class VerifyCommand extends Command{
 		StringBuilder sb = new StringBuilder();
 		sb.append("Welcome to the Mathematical Olympiads Discord Server ")
 			.append(event.getAuthor().getAsMention())
-			.append("! Check out the self-assignable roles in #roles and enjoy your time here. :)");
+			.append("! Check out the self-assignable roles in ")
+			.append(event.getGuild().getTextChannelsByName("roles", true).get(0).getAsMention())
+			.append(" and enjoy your time here. :smiley:");
 		event.getGuild().getTextChannelsByName("lounge", true).get(0)
 			.sendMessage(sb.toString()).queue();
 	}
