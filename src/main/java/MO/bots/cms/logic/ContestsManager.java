@@ -203,19 +203,19 @@ public class ContestsManager {
 	 * @return
 	 */
 	public static String userSchedule(User u) {
-		StringBuilder sb = new StringBuilder();
+		final String startString = "**YOUR TIMESLOTS**: \n```\n";
+		StringBuilder sb = new StringBuilder(startString);
 		String s;
 		for (Contest c : currentContests) {
 			s = c.contestantInfo(u);
 			if (!s.equals("")) {
-				sb.append("Contest ")
-				  .append(c.getName())
-				  .append(":\n")
+				sb.append(c.getName())
+				  .append(" ")
 				  .append(s)
 				  .append("\n");
 			}
 		}
-		if (!sb.toString().contentEquals("")) {
+		if (!sb.toString().contentEquals(startString)) {
 			return sb.toString();
 		} else {
 			return "You have not signed up for any timeslots. ";
@@ -255,8 +255,9 @@ public class ContestsManager {
 				return;
 			}
 		}
+		
 		StringBuilder exceptionString = new StringBuilder();
-		exceptionString.append("No contest with that name found. Active contests: ```");
+		exceptionString.append("No contest with that name found. Active contests: ```\n");
 		for (Contest c : currentContests) {
 			exceptionString.append(c.getName()).append("\n");
 		}

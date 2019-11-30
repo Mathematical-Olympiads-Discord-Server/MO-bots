@@ -345,19 +345,14 @@ public class Contest {
 		StringBuilder sb = new StringBuilder();
 		for (Timeslot t : timeslots) {
 			if (t.getUsers().contains(u)) {
-				sb.append("Timeslot " + t.getName() + " starting at " + 
-						t.getStartInstant().toString() + " which is in " + 
-						Instant.now().until(t.getStartInstant(), ChronoUnit.SECONDS) +
-						" seconds, or approximately " + 
-						Instant.now().until(t.getStartInstant(), ChronoUnit.MINUTES) + 
-						" minutes. (" + 
-						Instant.now().until(t.getStartInstant(), ChronoUnit.HOURS) + 
-					    " hours and " + 
-						(Instant.now().until(t.getStartInstant(), ChronoUnit.MINUTES)%60) + 
-						" minutes)");
-				sb.append("\n");
-						
-						
+				sb.append(t.getName())
+					.append(" in ")
+					.append(Instant.now().until(t.getStartInstant(), ChronoUnit.DAYS))
+					.append(" days, ")
+					.append(Instant.now().until(t.getStartInstant(), ChronoUnit.HOURS)%24)
+					.append(" hours, and ")
+					.append(Instant.now().until(t.getStartInstant(), ChronoUnit.MINUTES)%60)
+					.append(" minutes.");
 			}
 		}
 		

@@ -1,9 +1,12 @@
 package MO.bots.cms.commands;
 
+import java.util.List;
+
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 
 import MO.bots.cms.logic.ContestsManager;
+import net.dv8tion.jda.core.entities.Role;
 
 public class CancelCommand extends CommandWithLogging {
 
@@ -38,6 +41,13 @@ public class CancelCommand extends CommandWithLogging {
 			return;
 		}
 		event.reply("Succesfully removed you from the contest. ");
+		
+		//Remove the timeslot role
+		List<Role> tsRoles = event.getGuild().getRolesByName(timeslot, true);
+		if (tsRoles.isEmpty())
+			return;
+		
+		event.getGuild().getController().removeRolesFromMember(event.getMember(), tsRoles).queue();
 	}
 
 }
