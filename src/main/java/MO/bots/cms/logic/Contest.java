@@ -381,14 +381,15 @@ public class Contest {
 			exceptionString.append("Timeslot does not exist. Available timeslots: ```");
 			for (Timeslot t: timeslots) {
 				exceptionString.append(t.getName()).append(" starting at ")
-					.append(t.getStartInstant().toString()).append("\n")
+					.append(t.getStartInstant().toString())
 					.append(" in ")
 					.append(Instant.now().until(t.getStartInstant(), ChronoUnit.DAYS))
 					.append(" days, ")
 					.append(Instant.now().until(t.getStartInstant(), ChronoUnit.HOURS)%24)
 					.append(" hours, and ")
 					.append(Instant.now().until(t.getStartInstant(), ChronoUnit.MINUTES)%60)
-					.append(" minutes.");
+					.append(" minutes.")
+					.append("\n");
 			}
 			exceptionString.append("```");
 			throw new IllegalArgumentException(exceptionString.toString());
