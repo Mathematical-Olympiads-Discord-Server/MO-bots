@@ -20,6 +20,7 @@ import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageReaction;
 import net.dv8tion.jda.core.entities.Role;
 import net.dv8tion.jda.core.entities.User;
+import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.events.message.react.MessageReactionAddEvent;
 
 public class Contest {
@@ -227,7 +228,7 @@ public class Contest {
 	 * @param timeslotName Name of the timeslot
 	 * @param userID The ID of the user to be added. 
 	 */
-	public void addContestant(CommandEvent event, String timeslotName, long userID) {
+	public void addContestant(MessageReceivedEvent event, String timeslotName, long userID) {
 		User contestant = event.getGuild().getMemberById(userID).getUser();
 		for (Timeslot t : timeslots) {
 			if (t.getName().contentEquals(timeslotName)) {

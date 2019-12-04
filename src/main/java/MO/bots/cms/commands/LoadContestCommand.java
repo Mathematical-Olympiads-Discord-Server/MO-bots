@@ -34,7 +34,7 @@ public class LoadContestCommand extends CommandWithLogging {
 	@Override
 	protected void exec(CommandEvent event) {
 		try {
-			Contest c = SheetsIntegration.loadContest(event.getArgs().split(" ")[0], event);
+			Contest c = SheetsIntegration.loadContest(event.getArgs().split(" ")[0], event.getEvent());
 			ContestsManager.addNewContest(c);
 		} catch (GeneralSecurityException | IOException e) {
 			// TODO Auto-generated catch block

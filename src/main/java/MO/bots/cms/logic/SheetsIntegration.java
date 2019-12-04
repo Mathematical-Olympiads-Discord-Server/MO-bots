@@ -26,6 +26,7 @@ import com.google.api.services.sheets.v4.model.ValueRange;
 import com.jagrosh.jdautilities.command.CommandEvent;
 
 import net.dv8tion.jda.core.entities.User;
+import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
 public class SheetsIntegration {
 	private static final String APPLICATION_NAME = "Mathematical Olympiad Discord Server Contest Management System";
@@ -76,7 +77,7 @@ public class SheetsIntegration {
      * @throws GeneralSecurityException
      * @throws IOException
      */
-    public static Contest loadContest(String spreadsheetId, CommandEvent event) throws GeneralSecurityException, IOException {
+    public static Contest loadContest(String spreadsheetId, MessageReceivedEvent event) throws GeneralSecurityException, IOException {
     	final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
     	final String timeslotsRange = TIMESLOTS_SHEET_NAME + "!A2:E";
     	final String generalInfoRange = INFO_SHEET_NAME + "!A2:H";

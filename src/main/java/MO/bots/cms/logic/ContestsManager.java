@@ -234,7 +234,7 @@ public class ContestsManager {
 	public static void reloadContest (int pos, CommandEvent triggerEvent) throws GeneralSecurityException, IOException,
 		ArrayIndexOutOfBoundsException {
 		Contest newContest = SheetsIntegration.loadContest(
-				currentContests.get(pos).getSpreadsheetId(), triggerEvent);
+				currentContests.get(pos).getSpreadsheetId(), triggerEvent.getEvent());
 		currentContests.get(pos).cancelSchedule();
 		currentContests.set(pos, newContest);
 	}

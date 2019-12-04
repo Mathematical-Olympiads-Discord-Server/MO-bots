@@ -29,7 +29,7 @@ public class AutoLoadCommand extends CommandWithLogging {
 		for (String id : sheetIds) {
 			Contest c;
 			try {
-				c = SheetsIntegration.loadContest(id, event);
+				c = SheetsIntegration.loadContest(id, event.getEvent());
 			} catch (Exception e) {
 				event.reply("Something went wrong");
 				StringBuilder sb = new StringBuilder();

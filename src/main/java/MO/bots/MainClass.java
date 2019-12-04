@@ -101,6 +101,7 @@ public class MainClass {
 		cms.setToken(token);
 		cms.addEventListener(cmsBuilder.build());
 		cms.addEventListener(sm);
+		cms.addEventListener(new AutoLoad());
 		//cms.addEventListener(new AutoAddContestant());
 		cms.build();
 	}
