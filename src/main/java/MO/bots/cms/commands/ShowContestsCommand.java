@@ -3,7 +3,6 @@
  */
 package MO.bots.cms.commands;
 
-import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 
 import MO.bots.cms.logic.ContestsManager;

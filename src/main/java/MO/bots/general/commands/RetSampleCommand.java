@@ -9,7 +9,7 @@ import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 
 import MO.bots.MainClass;
-import MO.bots.cms.logic.SheetsIntegration;
+import MO.bots.shared.SheetsIntegration;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageHistory;
 import net.dv8tion.jda.core.entities.TextChannel;

@@ -56,7 +56,8 @@ public class MainClass {
 								new SampleCommand(),
 								new RetSampleCommand(),
 								new RemoveContestCommand(),
-								new AutoLoadCommand());
+								new AutoLoadCommand(),
+								new NotifyUnRegisteredCommand());
 		cmsBuilder.setHelpConsumer((CommandEvent event) -> {
 			final String managerRole = MainClass.managerRole;
 			

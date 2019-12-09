@@ -6,7 +6,7 @@ import java.util.ConcurrentModificationException;
 import java.util.List;
 import java.util.Random;
 
-import MO.bots.cms.logic.SheetsIntegration;
+import MO.bots.shared.SheetsIntegration;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;

@@ -7,6 +7,7 @@ import java.util.List;
 
 import com.jagrosh.jdautilities.command.CommandEvent;
 
+import MO.bots.shared.SheetsIntegration;
 import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.events.message.react.MessageReactionAddEvent;
 

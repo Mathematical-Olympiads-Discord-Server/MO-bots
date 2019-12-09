@@ -2,7 +2,6 @@ package MO.bots.cms.commands;
 
 import java.util.List;
 
-import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 
 import MO.bots.cms.logic.ContestsManager;
