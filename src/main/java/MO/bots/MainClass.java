@@ -54,6 +54,7 @@ public class MainClass {
 								new PingRoleCommand(),
 								new RecordStatsCommand(),
 								new SampleCommand(),
+								new RetSampleCommand(),
 								new RemoveContestCommand(),
 								new AutoLoadCommand());
 		cmsBuilder.setHelpConsumer((CommandEvent event) -> {
