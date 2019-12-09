@@ -106,5 +106,23 @@ public class MainClass {
 		cms.addEventListener(new AutoLoad());
 		//cms.addEventListener(new AutoAddContestant());
 		cms.build();
+		
+		
+		CommandClientBuilder potdBuilder = new CommandClientBuilder();
+		potdBuilder.setPrefix("+");
+		potdBuilder.useDefaultGame();
+		potdBuilder.setOwnerId("281300961312374785");
+		potdBuilder.addCommands(
+				new PingCommand()
+			);
+		JDABuilder potd = new JDABuilder(AccountType.BOT);
+		token = System.getenv("MO-bots-POTD-token");
+		if (token == null) {
+			System.out.print("Input POTD API token:");
+			token = sc.nextLine();
+		}
+		potd.setToken(token);
+		potd.addEventListener(potdBuilder.build());
+		potd.build();
 	}
 }
