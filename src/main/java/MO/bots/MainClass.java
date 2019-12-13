@@ -13,6 +13,7 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 import MO.bots.cms.commands.*;
 import MO.bots.general.commands.*;
 import MO.bots.general.sampling.SampleManager;
+import MO.bots.potd.commands.PotdCommand;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDABuilder;
 
@@ -113,10 +114,11 @@ public class MainClass {
 		potdBuilder.useDefaultGame();
 		potdBuilder.setOwnerId("281300961312374785");
 		potdBuilder.addCommands(
-				new PingCommand()
+				new PingCommand(),
+				new PotdCommand()
 			);
 		JDABuilder potd = new JDABuilder(AccountType.BOT);
-		token = System.getenv("MO-bots-POTD-token");
+		token = System.getenv("CMSAPITOKEN");
 		if (token == null) {
 			System.out.print("Input POTD API token:");
 			token = sc.nextLine();
