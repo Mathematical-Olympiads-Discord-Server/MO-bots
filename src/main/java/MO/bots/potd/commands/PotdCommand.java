@@ -65,7 +65,27 @@ public class PotdCommand extends CommandWithLogging {
 			System.out.println(toTex.toString());
 			StringBuilder newToTex = new StringBuilder();
 			
-		    BufferedImage image = (BufferedImage) TeXFormula.createBufferedImage(toTex.toString(), TeXFormula.SERIF, 14.0f, new Color(0xff, 0xff, 0xff), new Color(0x00,0x00,0x00));
+			int last$ = -1;
+			boolean inMathMode = false;
+			newToTex.append("\\text{");
+			for (int i = 0; i < toTex.length(); i++) {
+				char c = toTex.charAt(i);
+				if (c == '$') {
+					if (inMathMode) {
+						inMathMode = false;
+						newToTex.append("\\text{");
+					} else {
+						inMathMode = true;
+						newToTex.append("}");
+					}
+				} else {
+					newToTex.append(c);
+				}
+			}
+			newToTex.append("}");
+			System.out.println(newToTex.toString());
+			
+		    BufferedImage image = (BufferedImage) TeXFormula.createBufferedImage(newToTex.toString(), TeXFormula.SERIF, 14.0f, new Color(0xff, 0xff, 0xff), new Color(0x00,0x00,0x00));
 		    ByteArrayOutputStream bytes = new ByteArrayOutputStream();
 		    ImageIO.write(image, "png", bytes);
 		    event.getTextChannel().sendFile(bytes.toByteArray(), requestedPotd + ".png").queue();
