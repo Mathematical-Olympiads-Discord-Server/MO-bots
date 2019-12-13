@@ -554,7 +554,7 @@ class Timeslot {
 		if (!this.isCustomTimeslot) {
 			schedule.add(new AllowConnectionTask(this, "Allow participants to join VC", this.startTime.minus(Duration.ofMinutes(15)),
 					this.name, CONTEST_ROOM_NAME));
-			schedule.add(new DisAllowConnectionTask(this, "Remove VC Connection permissions", this.startTime.plus(Duration.ofMinutes(5)),
+			schedule.add(new DisAllowConnectionTask(this, "Remove VC Connection permissions", this.endTime.plus(Duration.ofMinutes(5)),
 					this.name, CONTEST_ROOM_NAME));
 			
 		}
