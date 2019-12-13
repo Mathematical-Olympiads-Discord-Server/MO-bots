@@ -6,13 +6,12 @@ package MO.bots.cms.commands;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 
-import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 
 import MO.bots.MainClass;
 import MO.bots.cms.logic.Contest;
 import MO.bots.cms.logic.ContestsManager;
-import MO.bots.cms.logic.SheetsIntegration;
+import MO.bots.shared.SheetsIntegration;
 
 /**
  * @author IcosahedralDice

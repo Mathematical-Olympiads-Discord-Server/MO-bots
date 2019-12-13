@@ -2,7 +2,7 @@ package MO.bots.cms.commands;
 
 import MO.bots.cms.logic.Contest;
 import MO.bots.cms.logic.ContestsManager;
-import MO.bots.cms.logic.SheetsIntegration;
+import MO.bots.shared.SheetsIntegration;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 

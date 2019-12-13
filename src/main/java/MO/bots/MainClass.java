@@ -13,6 +13,7 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 import MO.bots.cms.commands.*;
 import MO.bots.general.commands.*;
 import MO.bots.general.sampling.SampleManager;
+import MO.bots.potd.commands.PotdCommand;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDABuilder;
 
@@ -56,7 +57,8 @@ public class MainClass {
 								new SampleCommand(),
 								new RetSampleCommand(),
 								new RemoveContestCommand(),
-								new AutoLoadCommand());
+								new AutoLoadCommand(),
+								new NotifyUnRegisteredCommand());
 		cmsBuilder.setHelpConsumer((CommandEvent event) -> {
 			final String managerRole = MainClass.managerRole;
 			
@@ -105,5 +107,24 @@ public class MainClass {
 		cms.addEventListener(new AutoLoad());
 		//cms.addEventListener(new AutoAddContestant());
 		cms.build();
+		
+		
+		CommandClientBuilder potdBuilder = new CommandClientBuilder();
+		potdBuilder.setPrefix("+");
+		potdBuilder.useDefaultGame();
+		potdBuilder.setOwnerId("281300961312374785");
+		potdBuilder.addCommands(
+				new PingCommand(),
+				new PotdCommand()
+			);
+		JDABuilder potd = new JDABuilder(AccountType.BOT);
+		token = System.getenv("CMSAPITOKEN");
+		if (token == null) {
+			System.out.print("Input POTD API token:");
+			token = sc.nextLine();
+		}
+		potd.setToken(token);
+		potd.addEventListener(potdBuilder.build());
+		potd.build();
 	}
 }

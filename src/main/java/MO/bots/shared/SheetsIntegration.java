@@ -1,4 +1,4 @@
-package MO.bots.cms.logic;
+package MO.bots.shared;
 
 import java.io.ByteArrayInputStream;
 import java.io.FileNotFoundException;
@@ -23,10 +23,10 @@ import com.google.api.services.sheets.v4.model.BatchUpdateValuesRequest;
 import com.google.api.services.sheets.v4.model.BatchUpdateValuesResponse;
 import com.google.api.services.sheets.v4.model.ClearValuesRequest;
 import com.google.api.services.sheets.v4.model.ValueRange;
-import com.jagrosh.jdautilities.command.CommandEvent;
-
 import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
+
+import MO.bots.cms.logic.*;
 
 public class SheetsIntegration {
 	private static final String APPLICATION_NAME = "Mathematical Olympiad Discord Server Contest Management System";
