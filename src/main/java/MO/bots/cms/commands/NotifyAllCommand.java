@@ -1,6 +1,8 @@
 package MO.bots.cms.commands;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.jagrosh.jdautilities.command.CommandEvent;
 
@@ -12,7 +14,7 @@ import net.dv8tion.jda.core.entities.User;
 public class NotifyAllCommand extends CommandWithLogging {
 
 	public NotifyAllCommand() {
-		this.name = "notifyall";
+		this.name = "notifyoftimeslot";
 		this.arguments = "position message";
 		this.help = "Position is 0-indexed, and message is the message to send";
 		this.requiredRole = MainClass.managerRole;
@@ -21,26 +23,18 @@ public class NotifyAllCommand extends CommandWithLogging {
 
 	@Override
 	protected void exec(CommandEvent event) {
-		int position = 0;
-		try {
-			position = Integer.parseInt(event.getArgs().split(" ")[0]);
-		} catch (NumberFormatException nfe) {
-			event.reply("Invalid position! Please enter an integer");
-			return;
+		String message = event.getArgs();
+		
+		Set<User> allContestants = new HashSet<User>();
+		for (int i = 0; i < ContestsManager.numContests(); i++) {
+			allContestants.addAll(ContestsManager.getUsersInContest(i));
 		}
 		
-		List<User> users;
-		try {
-			users = ContestsManager.getUsersInContest(position);
-		} catch (ArrayIndexOutOfBoundsException ae) {
-			event.reply("No contest at position " + position);
-			return;
-		}
-		
-		String message = event.getArgs().substring(event.getArgs().indexOf(' '));
-		for (User u : users) {
+		for (User u : allContestants) {
 			u.openPrivateChannel().queue((PrivateChannel pc) -> {
-				pc.sendMessage(message);
+				String messageToSend = message + "\n" + ContestsManager.userSchedule(u);
+				System.out.println(messageToSend);
+				pc.sendMessage(messageToSend).queue();
 			});
 		}
 	}

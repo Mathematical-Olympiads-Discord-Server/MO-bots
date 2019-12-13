@@ -348,6 +348,8 @@ public class Contest {
 		for (Timeslot t : timeslots) {
 			if (t.getUsers().contains(u)) {
 				sb.append(t.getName())
+					.append(" at ")
+					.append(t.getStartInstant().toString())
 					.append(" in ")
 					.append(Instant.now().until(t.getStartInstant(), ChronoUnit.DAYS))
 					.append(" days, ")

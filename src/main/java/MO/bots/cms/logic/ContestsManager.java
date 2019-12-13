@@ -26,6 +26,14 @@ public class ContestsManager {
 	}
 	
 	/**
+	 * Gets the number of contests
+	 * @return
+	 */
+	public static int numContests() {
+		return currentContests.size();
+	}
+	
+	/**
 	 * Adds a new contest based on a pre-loaded contest. If 
 	 * the contest is not pre-loaded, please use newContest(String, long, long). 
 	 * @param c The pre-loaded contest to add. 
