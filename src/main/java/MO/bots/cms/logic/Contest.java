@@ -532,10 +532,22 @@ class Timeslot {
 		
 		//Set up tasks
 		mainTimer = new Timer();
-		schedule.add(new ReminderTask(this, "15 minutes left before the contest starts. Please head "
-				+ "to the Contest Room VC soon. Please also prepare the following materials: "
-				+ "Blank A4 Paper, Pen, Pencil, Compass and Ruler. You can now join Contest Room VC. ", 
-				"before contest reminder", this.startTime.minus(Duration.ofMinutes(15))));
+		if (!this.isCustomTimeslot) {
+			schedule.add(new AllowConnectionTask(this, "Allow participants to join VC", this.startTime.minus(Duration.ofMinutes(15)),
+					this.name, CONTEST_ROOM_NAME));
+			schedule.add(new DisAllowConnectionTask(this, "Remove VC Connection permissions", this.endTime.plus(Duration.ofMinutes(5)),
+					this.name, CONTEST_ROOM_NAME));
+			schedule.add(new ReminderTask(this, "15 minutes left before the contest starts. Please head "
+					+ "to the Contest Room VC soon. Please also prepare the following materials: "
+					+ "Blank A4 Paper, Pen, Pencil, Compass and Ruler. You can now join Contest Room VC. ", 
+					"before contest reminder", this.startTime.minus(Duration.ofMinutes(15))));
+			
+		} else {
+			schedule.add(new ReminderTask(this, "15 minutes left before the contest starts. Note that since "
+					+ "this is a custom timeslot, you do not need to join Contest Room VC. Please also prepare the "
+					+ "following materials: Blank A4 Paper, Pen, Pencil, Compass and Ruler.", "before contest reminder",
+					this.startTime.minus(Duration.ofMinutes(15))));
+		}
 		schedule.add(new ReminderTask(this, "5 minutes left before the contest starts. Please head "
 				+ "to the Contest Room VC soon. ", "before contest reminder 2", this.startTime.minus(Duration.ofMinutes(5))));
 		schedule.add(new ReminderTask(this, "The contest has started - you may now look at the contest paper and "
@@ -551,13 +563,6 @@ class Timeslot {
 				+ "given in " + formLink + ". Thank you for participating in this contest! Further instructions "
 				+ "are available in the form. ", "Contest end reminder",
 				this.endTime));
-		if (!this.isCustomTimeslot) {
-			schedule.add(new AllowConnectionTask(this, "Allow participants to join VC", this.startTime.minus(Duration.ofMinutes(15)),
-					this.name, CONTEST_ROOM_NAME));
-			schedule.add(new DisAllowConnectionTask(this, "Remove VC Connection permissions", this.endTime.plus(Duration.ofMinutes(5)),
-					this.name, CONTEST_ROOM_NAME));
-			
-		}
 		schedule.add(new AssignRolesTask(this, this.roleId, "Assign Now Competing roles", this.startTime));
 		schedule.add(new AssignRolesTask(this, this.finishedRoleId, "Assign finished roles", this.endTime));
 		schedule.add(new RemoveRolesTask(this, "Remove now competing roles", this.endTime));
