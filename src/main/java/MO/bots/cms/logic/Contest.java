@@ -708,7 +708,9 @@ class ReminderTask extends TimerTaskWithSchedule {
 		System.out.println(remindMessage);
 		for (User u : tiedTimeslot.getUsers()) {
 			u.openPrivateChannel().complete().sendMessage(remindMessage).queue();
+			System.out.printf("Sent to %s (id: %s)\n", u.getName(), u.getId());
 		}
+		System.out.println();
 	}
 }
 
