@@ -565,7 +565,7 @@ class Timeslot {
 				this.endTime));
 		schedule.add(new AssignRolesTask(this, this.roleId, "Assign Now Competing roles", this.startTime));
 		schedule.add(new AssignRolesTask(this, this.finishedRoleId, "Assign finished roles", this.endTime));
-		schedule.add(new RemoveRolesTask(this, "Remove now competing roles", this.endTime));
+		schedule.add(new RemoveRolesTask(this, "Remove now competing roles", this.endTime.plus(Duration.ofSeconds(5))));
 		
 		/*
 		beforeContestReminder = new ReminderTask(this, "15 minutes left before the contest starts. "
@@ -749,9 +749,10 @@ class AssignRolesTask extends TimerTaskWithSchedule {
 		System.out.println("AssignRolesTask task is running. ");
 		Role toAdd = this.tiedTimeslot.getContestGuild().getRoleById(roleId);
 		for (User u : tiedTimeslot.getUsers()) {
-			System.out.printf("Assigning role %s (id: %s) from %s\n", toAdd.getName(), toAdd.getId(), u.getName());
 			tiedTimeslot.getContestGuild().getController()
-				.addRolesToMember(tiedTimeslot.getContestGuild().getMember(u), toAdd).queue();
+				.addRolesToMember(tiedTimeslot.getContestGuild().getMember(u), toAdd).queue((Void) -> {
+					System.out.printf("Assigned role %s (id: %s) to %s\n", toAdd.getName(), toAdd.getId(), u.getName());
+				});
 		}
 		System.out.println();
 	}
@@ -776,7 +777,9 @@ class RemoveRolesTask extends TimerTaskWithSchedule {
 		for (User u : tiedTimeslot.getUsers()) {
 			System.out.printf("Removing role %s (id: %s, args) from %s\n", toRemove.getName(), toRemove.getId(), u.getName());
 			tiedTimeslot.getContestGuild().getController()
-				.removeRolesFromMember(tiedTimeslot.getContestGuild().getMember(u), toRemove).queue();
+				.removeRolesFromMember(tiedTimeslot.getContestGuild().getMember(u), toRemove).queue((Void) -> {
+					System.out.printf("Removed role %s (id: %s) from %s\n", toRemove.getName(), toRemove.getId(), u.getName());
+				});
 		}
 		System.out.println();
 	}
