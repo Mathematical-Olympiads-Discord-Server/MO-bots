@@ -156,7 +156,7 @@ public class SheetsIntegration {
     	AppendValuesResponse result = service.spreadsheets().values()
     			.append(c.getSpreadsheetId(), usersAppendRange, body)
     			.setValueInputOption("USER_ENTERED").execute();
-    	System.out.printf("%d cells updated.", result.getUpdates().getUpdatedCells());
+    	System.out.printf("%d cells updated.\n", result.getUpdates().getUpdatedCells());
     }
     
     /**
@@ -239,7 +239,7 @@ public class SheetsIntegration {
     	AppendValuesResponse result = service.spreadsheets().values()
     			.append(spreadsheetId, appendRange, body)
     			.setValueInputOption("USER_ENTERED").execute();
-    	System.out.printf("%d cells updated.", result.getUpdates().getUpdatedCells());
+    	System.out.printf("%d cells updated.\n", result.getUpdates().getUpdatedCells());
     }
 
     /**
@@ -284,6 +284,6 @@ public class SheetsIntegration {
     	AppendValuesResponse result = service.spreadsheets().values()
     			.append(spreadsheetId, appendRange, body)
     			.setValueInputOption("USER_ENTERED").execute();
-    	System.out.printf("%d cells updated.", result.getUpdates().getUpdatedCells());
+    	System.out.printf("%d cells updated.\n", result.getUpdates().getUpdatedCells());
     }
 }

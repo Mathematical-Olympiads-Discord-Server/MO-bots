@@ -726,6 +726,8 @@ class ChannelMessageTask extends TimerTaskWithSchedule {
 	
 	@Override
 	public void run() {
+		System.out.print("Reminder task is running. Printing ");
+		System.out.println(message);
 		tiedTimeslot.getContestGuild().getTextChannelById(channelId).sendMessage(message).queue();
 	}
 }
@@ -742,11 +744,14 @@ class AssignRolesTask extends TimerTaskWithSchedule {
 
 	@Override
 	public void run() {
+		System.out.println("AssignRolesTask task is running. ");
 		Role toAdd = this.tiedTimeslot.getContestGuild().getRoleById(roleId);
 		for (User u : tiedTimeslot.getUsers()) {
+			System.out.printf("Assigning role %s (id: %s) from %s\n", toAdd.getName(), toAdd.getId(), u.getName());
 			tiedTimeslot.getContestGuild().getController()
 				.addRolesToMember(tiedTimeslot.getContestGuild().getMember(u), toAdd).queue();
 		}
+		System.out.println();
 	}
 	
 	@Override
@@ -764,11 +769,14 @@ class RemoveRolesTask extends TimerTaskWithSchedule {
 	
 	@Override
 	public void run() {
+		System.out.println("RemoveRolesTask task is running. ");
 		Role toRemove = this.tiedTimeslot.getContestGuild().getRoleById(tiedTimeslot.getRoleId());
 		for (User u : tiedTimeslot.getUsers()) {
+			System.out.printf("Removing role %s (id: %s, args) from %s\n", toRemove.getName(), toRemove.getId(), u.getName());
 			tiedTimeslot.getContestGuild().getController()
 				.removeRolesFromMember(tiedTimeslot.getContestGuild().getMember(u), toRemove).queue();
 		}
+		System.out.println();
 	}
 	
 	@Override
@@ -794,6 +802,8 @@ class AllowConnectionTask extends TimerTaskWithSchedule {
 	public void run() {
 		Guild g = this.tiedTimeslot.getContestGuild();
 		Role r = g.getRolesByName(this.role, true).get(0);
+		System.out.printf("Allowing connection for role %s (id: %s) in voice channel %s. \n", 
+				r.getName(), r.getId(), this.vcToAllow);
 		g.getVoiceChannelsByName(vcToAllow, true).get(0).putPermissionOverride(r).complete()
 			.getManager().grant(Permission.VOICE_CONNECT).deny(Permission.VOICE_SPEAK).queue();
 	}
@@ -821,6 +831,8 @@ class DisAllowConnectionTask extends TimerTaskWithSchedule {
 	public void run() {
 		Guild g = this.tiedTimeslot.getContestGuild();
 		Role r = g.getRolesByName(this.role, true).get(0);
+		System.out.printf("Disallowing connection for role %s (id: %s) in voice channel %s \n", 
+				r.getName(), r.getId(), this.vcToAllow);
 		g.getVoiceChannelsByName(vcToAllow, true).get(0).putPermissionOverride(r).complete()
 			.getManager().deny(Permission.VOICE_CONNECT).deny(Permission.VOICE_SPEAK).queue();
 	}
