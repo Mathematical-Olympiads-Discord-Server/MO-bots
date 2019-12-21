@@ -1,6 +1,8 @@
 package MO.bots;
 
 import java.util.Scanner;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 import javax.security.auth.login.LoginException;
 
@@ -27,6 +29,43 @@ public class MainClass {
 											new Category("User help")
 	};
 	
+	public static Consumer<CommandEvent> help = (CommandEvent event) -> {
+		final String managerRole = MainClass.managerRole;
+		
+		CommandClient client = event.getClient();
+		
+		if (event.getSelfMember() == null) {	//Check to see if it is in a guild
+			event.reply("Please use this command in a server. ");
+			return;
+		}
+		
+		//Checks whether the author is a staff member or not. 
+		boolean seeStaffCommands = event.getGuild().getMemberById(event.getAuthor().getId())
+				.getRoles().contains(event.getGuild().getRolesByName("Staff", true).get(0));
+		
+		StringBuilder sb = new StringBuilder("**Contest Management System** commands:\n\n");
+		sb.ensureCapacity(2000);
+		if (!seeStaffCommands)
+			sb.append("___Note: only showing non-staff commands___\n");
+		for (Command c : client.getCommands()) {
+			if (c.getRequiredRole() == null) {
+				sb.append("``").append(client.getPrefix()).append(c.getName())
+				.append("``").append(" - ").append(c.getHelp()).append("\n");
+				
+			} else if (c.getRequiredRole().contentEquals(managerRole)) {
+				//This is a staff command - only show to staff members
+				if (seeStaffCommands) {
+					sb.append("``").append(client.getPrefix()).append(c.getName())
+						.append("``").append(" - ").append(c.getHelp()).append("\n");
+				}
+			} else {
+				sb.append("``").append(client.getPrefix()).append(c.getName())
+					.append("``").append(" - ").append(c.getHelp()).append("\n");
+			}
+		}
+		event.getAuthor().openPrivateChannel().complete().sendMessage(sb.toString()).queue();		
+	};
+	
 	public static SampleManager sm;
 	
 	public static void main (String[] args) throws LoginException {
@@ -40,8 +79,6 @@ public class MainClass {
 								new SignupCommand(),
 								new CancelCommand(),
 								new ShowContestsCommand(),
-								new VerifyCommand(),
-								new HomeworkCommand(),
 								new NewContestCommand(),
 								new NewTimeslotCommand(),
 								new NewTimeslotUCommand(),
@@ -52,49 +89,10 @@ public class MainClass {
 								new ReloadContestCommand(),
 								new RemoveRoleCommand(),
 								new NotifyAllCommand(),
-								new PingRoleCommand(),
-								new RecordStatsCommand(),
-								new SampleCommand(),
-								new RetSampleCommand(),
 								new RemoveContestCommand(),
 								new AutoLoadCommand(),
 								new NotifyUnRegisteredCommand());
-		cmsBuilder.setHelpConsumer((CommandEvent event) -> {
-			final String managerRole = MainClass.managerRole;
-			
-			CommandClient client = event.getClient();
-			
-			if (event.getSelfMember() == null) {	//Check to see if it is in a guild
-				event.reply("Please use this command in a server. ");
-				return;
-			}
-			
-			//Checks whether the author is a staff member or not. 
-			boolean seeStaffCommands = event.getGuild().getMemberById(event.getAuthor().getId())
-					.getRoles().contains(event.getGuild().getRolesByName("Staff", true).get(0));
-			
-			StringBuilder sb = new StringBuilder("**Contest Management System** commands:\n\n");
-			sb.ensureCapacity(2000);
-			if (!seeStaffCommands)
-				sb.append("___Note: only showing non-staff commands___\n");
-			for (Command c : client.getCommands()) {
-				if (c.getRequiredRole() == null) {
-					sb.append("``").append(client.getPrefix()).append(c.getName())
-					.append("``").append(" - ").append(c.getHelp()).append("\n");
-					
-				} else if (c.getRequiredRole().contentEquals(managerRole)) {
-					//This is a staff command - only show to staff members
-					if (seeStaffCommands) {
-						sb.append("``").append(client.getPrefix()).append(c.getName())
-							.append("``").append(" - ").append(c.getHelp()).append("\n");
-					}
-				} else {
-					sb.append("``").append(client.getPrefix()).append(c.getName())
-						.append("``").append(" - ").append(c.getHelp()).append("\n");
-				}
-			}
-			event.getAuthor().openPrivateChannel().complete().sendMessage(sb.toString()).queue();
-		});
+		cmsBuilder.setHelpConsumer(help);
 		JDABuilder cms = new JDABuilder(AccountType.BOT);
 		String token = System.getenv("CMSAPITOKEN");
 		if (token == null) {
@@ -112,9 +110,16 @@ public class MainClass {
 		modsBotBuilder.setPrefix("-");
 		modsBotBuilder.useDefaultGame();
 		modsBotBuilder.setOwnerId("281300961312374785");
+		modsBotBuilder.setHelpConsumer(help);
 		modsBotBuilder.addCommands(
+				new HomeworkCommand(),
 				new PingCommand(),
-				new PotdCommand()
+				new PotdCommand(),
+				new PingRoleCommand(),
+				new RecordStatsCommand(),
+				new SampleCommand(),
+				new VerifyCommand(),
+				new RetSampleCommand()
 			);
 		JDABuilder modsBot = new JDABuilder(AccountType.BOT);
 		token = System.getenv("MO-bots-MODSBOTTOKEN");
