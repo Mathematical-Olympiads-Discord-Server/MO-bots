@@ -108,23 +108,18 @@ public class MainClass {
 		//cms.addEventListener(new AutoAddContestant());
 		cms.build();
 		
-		
-		CommandClientBuilder potdBuilder = new CommandClientBuilder();
-		potdBuilder.setPrefix("+");
-		potdBuilder.useDefaultGame();
-		potdBuilder.setOwnerId("281300961312374785");
-		potdBuilder.addCommands(
+		CommandClientBuilder modsBotBuilder = new CommandClientBuilder();
+		modsBotBuilder.setPrefix("-");
+		modsBotBuilder.useDefaultGame();
+		modsBotBuilder.setOwnerId("281300961312374785");
+		modsBotBuilder.addCommands(
 				new PingCommand(),
 				new PotdCommand()
 			);
-		JDABuilder potd = new JDABuilder(AccountType.BOT);
-		token = System.getenv("CMSAPITOKEN");
-		if (token == null) {
-			System.out.print("Input POTD API token:");
-			token = sc.nextLine();
-		}
-		potd.setToken(token);
-		potd.addEventListener(potdBuilder.build());
-		potd.build();
+		JDABuilder modsBot = new JDABuilder(AccountType.BOT);
+		token = System.getenv("MO-bots-MODSBOTTOKEN");
+		modsBot.setToken(token);
+		modsBot.addEventListener(modsBotBuilder.build());
+		modsBot.build();
 	}
 }
