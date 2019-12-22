@@ -1,4 +1,4 @@
-package MO.bots.general.commands;
+package MO.bots.modsbot.commands;
 
 import java.time.Duration;
 import java.time.Instant;

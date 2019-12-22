@@ -1,4 +1,4 @@
-package MO.bots.general.commands;
+package MO.bots.modsbot.commands;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;

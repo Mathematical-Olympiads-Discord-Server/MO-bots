@@ -1,4 +1,4 @@
-package MO.bots.general.commands;
+package MO.bots.modsbot.commands;
 
 import java.util.ArrayList;
 import java.util.Arrays;

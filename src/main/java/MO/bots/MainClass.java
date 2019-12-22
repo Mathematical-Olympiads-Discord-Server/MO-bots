@@ -15,6 +15,12 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 import MO.bots.cms.commands.*;
 import MO.bots.general.commands.*;
 import MO.bots.general.sampling.SampleManager;
+import MO.bots.modsbot.commands.EchoCommand;
+import MO.bots.modsbot.commands.HomeworkCommand;
+import MO.bots.modsbot.commands.RecordStatsCommand;
+import MO.bots.modsbot.commands.RetSampleCommand;
+import MO.bots.modsbot.commands.SampleCommand;
+import MO.bots.modsbot.commands.VerifyCommand;
 import MO.bots.potd.commands.PotdCommand;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDABuilder;
@@ -119,7 +125,8 @@ public class MainClass {
 				new RecordStatsCommand(),
 				new SampleCommand(),
 				new VerifyCommand(),
-				new RetSampleCommand()
+				new RetSampleCommand(),
+				new EchoCommand()
 			);
 		JDABuilder modsBot = new JDABuilder(AccountType.BOT);
 		token = System.getenv("MO-bots-MODSBOTTOKEN");
