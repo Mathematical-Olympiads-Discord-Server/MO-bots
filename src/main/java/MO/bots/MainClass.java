@@ -13,7 +13,6 @@ import com.jagrosh.jdautilities.command.CommandClientBuilder;
 import com.jagrosh.jdautilities.command.CommandEvent;
 
 import MO.bots.cms.commands.*;
-import MO.bots.general.commands.*;
 import MO.bots.general.sampling.SampleManager;
 import MO.bots.modsbot.commands.EchoCommand;
 import MO.bots.modsbot.commands.HomeworkCommand;
