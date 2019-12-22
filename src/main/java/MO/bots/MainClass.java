@@ -110,7 +110,7 @@ public class MainClass {
 		cms.addEventListener(sm);
 		cms.addEventListener(new AutoLoad());
 		//cms.addEventListener(new AutoAddContestant());
-		//cms.build();
+		cms.build();
 		
 		CommandClientBuilder modsBotBuilder = new CommandClientBuilder();
 		modsBotBuilder.setPrefix("-");
