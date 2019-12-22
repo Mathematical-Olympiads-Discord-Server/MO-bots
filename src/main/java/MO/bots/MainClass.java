@@ -14,6 +14,7 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 
 import MO.bots.cms.commands.*;
 import MO.bots.general.sampling.SampleManager;
+import MO.bots.modsbot.commands.AutoResponse;
 import MO.bots.modsbot.commands.EchoCommand;
 import MO.bots.modsbot.commands.HomeworkCommand;
 import MO.bots.modsbot.commands.RecordStatsCommand;
@@ -109,7 +110,7 @@ public class MainClass {
 		cms.addEventListener(sm);
 		cms.addEventListener(new AutoLoad());
 		//cms.addEventListener(new AutoAddContestant());
-		cms.build();
+		//cms.build();
 		
 		CommandClientBuilder modsBotBuilder = new CommandClientBuilder();
 		modsBotBuilder.setPrefix("-");
@@ -131,6 +132,7 @@ public class MainClass {
 		token = System.getenv("MO-bots-MODSBOTTOKEN");
 		modsBot.setToken(token);
 		modsBot.addEventListener(modsBotBuilder.build());
+		modsBot.addEventListener(new AutoResponse());
 		modsBot.build();
 	}
 }
