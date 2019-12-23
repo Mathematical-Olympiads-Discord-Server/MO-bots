@@ -21,4 +21,11 @@ public class AutoResponse extends ListenerAdapter {
 			event.getChannel().sendMessage(autoResponses.get(event.getChannel().getIdLong())).queue();
 		}
 	}
+	
+	public void onMessageDeleted (MessageReceivedEvent event) {
+		if (event.getAuthor().equals(event.getJDA().getSelfUser())) {
+			if (autoResponses.containsKey(event.getChannel().getIdLong())) 
+				event.getChannel().sendMessage(autoResponses.get(event.getChannel().getIdLong())).queue();
+		}
+	}
 }
