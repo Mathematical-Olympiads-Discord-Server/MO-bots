@@ -9,7 +9,7 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
 public class AutoDelete extends ListenerAdapter {
 	Timer mainTimer;
-	static final long delay = 15 * 1000;
+	static final long delay = 2 * 1000;
 	
 	public AutoDelete() {
 		mainTimer = new Timer();
