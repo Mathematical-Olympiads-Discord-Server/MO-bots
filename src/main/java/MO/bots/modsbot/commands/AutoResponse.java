@@ -3,6 +3,7 @@ package MO.bots.modsbot.commands;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.dv8tion.jda.core.events.message.MessageDeleteEvent;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
@@ -14,6 +15,7 @@ public class AutoResponse extends ListenerAdapter {
 		autoResponses.put(652813198667284483L, "yes");
 	}
 	
+	@Override
 	public void onMessageReceived (MessageReceivedEvent event) {
 		if (event.getAuthor().isBot()) return;
 		
@@ -22,10 +24,9 @@ public class AutoResponse extends ListenerAdapter {
 		}
 	}
 	
-	public void onMessageDeleted (MessageReceivedEvent event) {
-		if (event.getAuthor().equals(event.getJDA().getSelfUser())) {
-			if (autoResponses.containsKey(event.getChannel().getIdLong())) 
+	@Override
+	public void onMessageDelete (MessageDeleteEvent event) {
+		if (autoResponses.containsKey(event.getChannel().getIdLong())) 
 				event.getChannel().sendMessage(autoResponses.get(event.getChannel().getIdLong())).queue();
-		}
 	}
 }
