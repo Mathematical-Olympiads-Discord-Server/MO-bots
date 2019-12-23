@@ -17,7 +17,7 @@ public class AutoResponse extends ListenerAdapter {
 	
 	@Override
 	public void onMessageReceived (MessageReceivedEvent event) {
-		if (event.getAuthor().isBot()) return;
+		if (event.getAuthor().equals(event.getJDA().getSelfUser())) return;
 		
 		if (autoResponses.containsKey(event.getChannel().getIdLong())) {
 			event.getChannel().sendMessage(autoResponses.get(event.getChannel().getIdLong())).queue();
