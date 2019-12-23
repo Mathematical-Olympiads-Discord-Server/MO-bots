@@ -17,26 +17,28 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter;
 public class AutoDelete extends ListenerAdapter {
 	Timer mainTimer;
 	static final long delay = 2 * 1000;
+	static final long AUTODELETE_CHANNEL = 658511493691605008L;
 	
 	public AutoDelete() {
 		mainTimer = new Timer();
 	}
 	
 	public void onMessageReceived (MessageReceivedEvent event) {
+		if (event.getChannel().getIdLong() != AUTODELETE_CHANNEL) 
+			return;
+		
 		TimerTask t = new DeleteMessageTask(event.getMessage(), event.getGuild());
 		mainTimer.schedule(t, delay);
 	}
 }
 
 class DeleteMessageTask extends TimerTask {
-	private Guild messageGuild;
 	private Message messageToDelete;
 	static final long LOG_CHANNEL_ID = 559964001724006400L;
 	static final String LOG_SHEET_ID = "12YgBc7wd_N4x-FKW0qmbJKcXl2XshBcbWdsF1ZMSB2E";
 	
 	public DeleteMessageTask(Message m, Guild g) {
 		this.messageToDelete = m;
-		this.messageGuild = g;
 	}
 	
 	public void run() {
