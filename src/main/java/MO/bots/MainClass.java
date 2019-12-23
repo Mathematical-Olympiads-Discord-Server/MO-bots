@@ -14,6 +14,7 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 
 import MO.bots.cms.commands.*;
 import MO.bots.general.sampling.SampleManager;
+import MO.bots.modsbot.commands.AutoDelete;
 import MO.bots.modsbot.commands.AutoResponse;
 import MO.bots.modsbot.commands.EchoCommand;
 import MO.bots.modsbot.commands.HomeworkCommand;
@@ -133,6 +134,7 @@ public class MainClass {
 		modsBot.setToken(token);
 		modsBot.addEventListener(modsBotBuilder.build());
 		modsBot.addEventListener(new AutoResponse());
+		modsBot.addEventListener(new AutoDelete());
 		modsBot.build();
 	}
 }
