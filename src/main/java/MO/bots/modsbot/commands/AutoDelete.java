@@ -27,8 +27,25 @@ public class AutoDelete extends ListenerAdapter {
 		if (event.getChannel().getIdLong() != AUTODELETE_CHANNEL) 
 			return;
 		
+		long delayToUse = delay;
+		try {
+			String identifier = event.getMessage().getContentRaw().substring(0, 2);
+			int time = Integer.parseInt(event.getMessage().getContentRaw().split(" ")[1]);
+			if (identifier.contentEquals("-s")) {
+				delayToUse = time * 1000;
+			} else if (identifier.contentEquals("-m")) {
+				delayToUse = time * 60000;
+			} else if (identifier.contentEquals("-h")) {
+				delayToUse = time * 3600000;
+			} else if (identifier.contentEquals("-d")) {
+				delayToUse = time * 86400000;
+			} 
+		} catch (Exception e) {
+			
+		}
+		
 		TimerTask t = new DeleteMessageTask(event.getMessage(), event.getGuild());
-		mainTimer.schedule(t, delay);
+		mainTimer.schedule(t, delayToUse);
 	}
 }
 
@@ -43,7 +60,7 @@ class DeleteMessageTask extends TimerTask {
 	
 	public void run() {
 		this.messageToDelete.delete().queue();
-		List<Object> row = Arrays.asList((Object) Instant.now().toString(), 
+		List<Object> row = Arrays.asList((Object) this.messageToDelete.getCreationTime().toString(),
 				(Object) this.messageToDelete.getAuthor().toString(), 
 				this.messageToDelete.getAuthor().getId(), 
 				this.messageToDelete.getContentRaw());
