@@ -88,7 +88,7 @@ public class PotdCommand extends CommandWithLogging {
 					
 					//Construct source message
 					StringBuilder source = new StringBuilder();
-					source.append("Source: `");
+					source.append("Source: ||`");
 					int sourceLength = ((String) potdRow.get(4)).length();
 					source.append((String) potdRow.get(4));
 					source.append(" ");
@@ -96,7 +96,7 @@ public class PotdCommand extends CommandWithLogging {
 						source.append(" ");		//Pad to 49 chars
 					}
 					source.append((String) potdRow.get(5)).append((String) potdRow.get(6));
-					source.append("`");
+					source.append("`||");
 					sentChannel.sendMessage(source).complete();
 					
 					Role r = mre.getGuild().getRoleById(dailyId);
