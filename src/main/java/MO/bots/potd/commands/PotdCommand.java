@@ -9,7 +9,9 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.imageio.ImageIO;
 
@@ -33,11 +35,20 @@ import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
 public class PotdCommand extends CommandWithLogging {
 	static final String SPREADSHEET_ID = "10X0-CCSv7FenZP1YaKlDSE-PD4LSZAgpzT5Rs9F8hvA"; //CONFIG
+	private Map<String, Long> curators = new HashMap<String, Long>(); 
 	
 	public PotdCommand() {
 		this.name = "potd";
 		this.arguments = "number";
 		this.requiredRole = MainClass.managerRole;
+		
+		curators.put("nya10", 174175867268759553L);
+		curators.put("brainysmurfs", 281300961312374785L);
+		curators.put("Daniel", 118831126239248397L);
+		curators.put("Tony", 541318134699786272L);
+		curators.put("Sharky", 268970368524484609L);
+		curators.put("Will", 429525897167765505L);
+		curators.put("tanyushi", 300065144333926400L);
 	}
 
 	@Override
@@ -88,6 +99,17 @@ public class PotdCommand extends CommandWithLogging {
 					
 					//Construct source message
 					StringBuilder source = new StringBuilder();
+					String curator = (String) potdRow.get(3);
+					Long curatorId = curators.get(curator);
+					if (curatorId == null) {
+						//No curator found
+						source.append("Unknown curator. ");
+					} else {
+						source.append("Problem chosen by ")
+							.append(mre.getGuild().getMemberById(curatorId).getAsMention())
+							.append(". ");
+					}
+					
 					source.append("Source: ||`");
 					int sourceLength = ((String) potdRow.get(4)).length();
 					source.append((String) potdRow.get(4));
@@ -96,8 +118,7 @@ public class PotdCommand extends CommandWithLogging {
 						source.append(" ");		//Pad to 49 chars
 					}
 					source.append((String) potdRow.get(5)).append((String) potdRow.get(6));
-					source.append("`||");
-					sentChannel.sendMessage(source).complete();
+					source.append("`|| ");
 					
 					Role r = mre.getGuild().getRoleById(dailyId);
 					if (r == null) {
@@ -105,8 +126,11 @@ public class PotdCommand extends CommandWithLogging {
 						return;
 					}
 					r.getManager().setMentionable(true).complete();
-					mre.getChannel().sendMessage(r.getAsMention()).complete();
+					source.append(r.getAsMention());
+					mre.getTextChannel().sendMessage(source).complete();
 					r.getManager().setMentionable(false).complete();
+					
+					event.getMessage().delete().complete();
 				});
 			
 		} catch (Exception e) {
