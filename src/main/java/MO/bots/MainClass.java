@@ -23,6 +23,7 @@ import MO.bots.modsbot.commands.RetSampleCommand;
 import MO.bots.modsbot.commands.SampleCommand;
 import MO.bots.modsbot.commands.VerifyCommand;
 import MO.bots.potd.commands.PotdCommand;
+import MO.bots.potd.commands.PotdViewCommand;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDABuilder;
 
@@ -127,7 +128,8 @@ public class MainClass {
 				new SampleCommand(),
 				new VerifyCommand(),
 				new RetSampleCommand(),
-				new EchoCommand()
+				new EchoCommand(),
+				new PotdViewCommand()
 			);
 		JDABuilder modsBot = new JDABuilder(AccountType.BOT);
 		token = System.getenv("MO-bots-MODSBOTTOKEN");
