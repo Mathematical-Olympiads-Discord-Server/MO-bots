@@ -129,7 +129,8 @@ public class MainClass {
 				new VerifyCommand(),
 				new RetSampleCommand(),
 				new EchoCommand(),
-				new PotdViewCommand()
+				new PotdViewCommand(),
+				new PunishmentViewCommand()
 			);
 		JDABuilder modsBot = new JDABuilder(AccountType.BOT);
 		token = System.getenv("MO-bots-MODSBOTTOKEN");
