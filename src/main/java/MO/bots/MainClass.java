@@ -18,6 +18,7 @@ import MO.bots.modsbot.commands.AutoDelete;
 import MO.bots.modsbot.commands.AutoResponse;
 import MO.bots.modsbot.commands.EchoCommand;
 import MO.bots.modsbot.commands.HomeworkCommand;
+import MO.bots.modsbot.commands.PunishmentViewCommand;
 import MO.bots.modsbot.commands.RecordStatsCommand;
 import MO.bots.modsbot.commands.RetSampleCommand;
 import MO.bots.modsbot.commands.SampleCommand;
@@ -99,6 +100,7 @@ public class MainClass {
 								new NotifyAllCommand(),
 								new RemoveContestCommand(),
 								new AutoLoadCommand(),
+								new PingAllInContestCommand(),
 								new NotifyUnRegisteredCommand());
 		cmsBuilder.setHelpConsumer(help);
 		JDABuilder cms = new JDABuilder(AccountType.BOT);

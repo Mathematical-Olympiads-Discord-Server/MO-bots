@@ -120,15 +120,17 @@ public class PotdCommand extends CommandWithLogging {
 					source.append((String) potdRow.get(5)).append((String) potdRow.get(6));
 					source.append("`|| ");
 					
+					/*
 					Role r = mre.getGuild().getRoleById(dailyId);
 					if (r == null) {
 						event.reply("No role with that id");
 						return;
 					}
 					r.getManager().setMentionable(true).complete();
-					source.append(r.getAsMention());
+					source.append(r.getAsMention());*/
 					mre.getTextChannel().sendMessage(source).complete();
-					r.getManager().setMentionable(false).complete();
+					//r.getManager().setMentionable(false).complete();
+					
 					
 					event.getMessage().delete().complete();
 				});
