@@ -48,6 +48,7 @@ public class PotdCommand extends CommandWithLogging {
 		curators.put("Tony", 541318134699786272L);
 		curators.put("Sharky", 268970368524484609L);
 		curators.put("Will", 429525897167765505L);
+		curators.put("A02", 457641101629849605L);
 		curators.put("tanyushi", 300065144333926400L);
 	}
 
