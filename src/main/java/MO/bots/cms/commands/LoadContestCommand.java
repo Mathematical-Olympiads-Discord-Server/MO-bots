@@ -45,7 +45,7 @@ public class LoadContestCommand extends CommandWithLogging {
 			event.reply(e.getMessage());
 			return;
 		}
-		event.reply("Successfully loaded a contest from sheet" + event.getArgs().split(" ")[0]);
+		event.reply(":check:  **Successfully Loaded** from sheet " + event.getArgs().split(" ")[0]);
 	}
 
 }
