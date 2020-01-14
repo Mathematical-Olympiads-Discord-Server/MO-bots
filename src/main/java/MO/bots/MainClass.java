@@ -139,7 +139,7 @@ public class MainClass {
 		modsBot.setToken(token);
 		modsBot.addEventListener(modsBotBuilder.build());
 		modsBot.addEventListener(new AutoResponse());
-		modsBot.addEventListener(new AutoDelete());
+		//modsBot.addEventListener(new AutoDelete());
 		modsBot.build();
 	}
 }
