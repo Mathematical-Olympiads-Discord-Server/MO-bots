@@ -532,8 +532,8 @@ class Timeslot {
 		
 		//Set up tasks
 		mainTimer = new Timer();
-		schedule.add(new ReminderTask(this, "1 day reminder", 
-				"Your timeslot starts 1 day from now. ", this.startTime.minus(Duration.ofDays(1))));
+		schedule.add(new ReminderTask(this, 
+				"Your timeslot starts 1 day from now. ", "1 day reminder", this.startTime.minus(Duration.ofDays(1))));
 		
 		if (!this.isCustomTimeslot) {
 			schedule.add(new AllowConnectionTask(this, "Allow participants to join VC", this.startTime.minus(Duration.ofMinutes(15)),
