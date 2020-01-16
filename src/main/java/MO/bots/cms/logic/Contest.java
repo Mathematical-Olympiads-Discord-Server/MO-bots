@@ -532,6 +532,9 @@ class Timeslot {
 		
 		//Set up tasks
 		mainTimer = new Timer();
+		schedule.add(new ReminderTask(this, "1 day reminder", 
+				"Your timeslot starts 1 day from now. ", this.startTime.minus(Duration.ofDays(1))));
+		
 		if (!this.isCustomTimeslot) {
 			schedule.add(new AllowConnectionTask(this, "Allow participants to join VC", this.startTime.minus(Duration.ofMinutes(15)),
 					this.name, CONTEST_ROOM_NAME));
@@ -548,6 +551,7 @@ class Timeslot {
 					+ "following materials: Blank A4 Paper, Pen, Pencil, Compass and Ruler.", "before contest reminder",
 					this.startTime.minus(Duration.ofMinutes(15))));
 		}
+		
 		schedule.add(new ReminderTask(this, "5 minutes left before the contest starts. Please head "
 				+ "to the Contest Room VC soon. ", "before contest reminder 2", this.startTime.minus(Duration.ofMinutes(5))));
 		schedule.add(new ReminderTask(this, "The contest has started - you may now look at the contest paper and "
