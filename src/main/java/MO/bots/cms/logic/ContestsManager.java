@@ -274,10 +274,10 @@ public class ContestsManager {
 		throw new IllegalArgumentException(exceptionString.toString());
 	}
 	
-	public static void removeContestant (User u, String contest, String timeslot) {
+	public static void removeContestant (User u, String contest) {
 		for (Contest c : currentContests) {
 			if (c.getName().contentEquals(contest)) {
-				c.removeUser(u, timeslot);
+				c.removeUser(u);
 				return;
 			}
 		}

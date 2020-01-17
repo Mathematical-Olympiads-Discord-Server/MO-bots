@@ -416,25 +416,19 @@ public class Contest {
 	 * @throws IllegalArgumentException if any of the paramters are wrong. 
 	 * Given in a format suitable for user output. 
 	 */
-	public void removeUser(User u, String timeslot) throws IllegalArgumentException {
+	public void removeUser(User u) throws IllegalArgumentException {
 		for (Timeslot t : timeslots) {
-			if (t.getName().contentEquals(timeslot)) {
-				if (t.getUsers().contains(u)) {
-					t.removeUser(u);
-					//Re-write
-					try {
-						SheetsIntegration.saveContest(this);
-						return;
-					} catch (IOException e) {
-						e.printStackTrace();
-						return;
-					}
+			if (t.getUsers().contains(u)) {
+				if (t.getStartInstant().isBefore(Instant.now())) {
+					throw new IllegalArgumentException("Cannot cancel a timeslot after "
+							+ "it has begun!");
 				} else {
-					throw new IllegalArgumentException("You were never signed up for this timeslot. ");
+					t.removeUser(u);
+					return;
 				}
 			}
 		}
-		throw new IllegalArgumentException("No timeslot with this name exists. ");
+		throw new IllegalArgumentException("You have not signed up to any timeslots in this contest. ");
 	}
 	
 	/**
@@ -533,7 +527,11 @@ class Timeslot {
 		//Set up tasks
 		mainTimer = new Timer();
 		schedule.add(new ReminderTask(this, 
-				"Your timeslot starts 1 day from now. ", "1 day reminder", this.startTime.minus(Duration.ofDays(1))));
+				"Your timeslot starts 1 day from now. Note that if you wish to "
+				+ "not sit the contest anymore, please cancel before your timeslot. Sitting"
+				+ " a timeslot without submitting scripts will result in a 3-month ban "
+				+ "(up to and including the next same-level contest). "
+					, "1 day reminder", this.startTime.minus(Duration.ofDays(1))));
 		
 		if (!this.isCustomTimeslot) {
 			schedule.add(new AllowConnectionTask(this, "Allow participants to join VC", this.startTime.minus(Duration.ofMinutes(15)),
