@@ -26,9 +26,8 @@ public class CancelCommand extends CommandWithLogging {
 	protected void exec(CommandEvent event) {
 		String contest, timeslot;
 		try {
-			contest = event.getArgs().split(" ")[0];
-			timeslot = event.getArgs().split(" ")[1];
-			ContestsManager.removeContestant(event.getAuthor(), contest);
+			contest = event.getArgs();
+			timeslot = ContestsManager.removeContestant(event.getAuthor(), contest);
 		} catch (IndexOutOfBoundsException e) {
 			event.reply("Not enough arguments!");
 			return;

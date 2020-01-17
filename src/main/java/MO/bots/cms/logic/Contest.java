@@ -416,7 +416,7 @@ public class Contest {
 	 * @throws IllegalArgumentException if any of the paramters are wrong. 
 	 * Given in a format suitable for user output. 
 	 */
-	public void removeUser(User u) throws IllegalArgumentException {
+	public String removeUser(User u) throws IllegalArgumentException {
 		for (Timeslot t : timeslots) {
 			if (t.getUsers().contains(u)) {
 				if (t.getStartInstant().isBefore(Instant.now())) {
@@ -424,7 +424,7 @@ public class Contest {
 							+ "it has begun!");
 				} else {
 					t.removeUser(u);
-					return;
+					return t.getName();
 				}
 			}
 		}

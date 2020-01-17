@@ -274,11 +274,10 @@ public class ContestsManager {
 		throw new IllegalArgumentException(exceptionString.toString());
 	}
 	
-	public static void removeContestant (User u, String contest) {
+	public static String removeContestant (User u, String contest) {
 		for (Contest c : currentContests) {
 			if (c.getName().contentEquals(contest)) {
-				c.removeUser(u);
-				return;
+				return c.removeUser(u);
 			}
 		}
 		throw new IllegalArgumentException("No contest with that name found. ");
