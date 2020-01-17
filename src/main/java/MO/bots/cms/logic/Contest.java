@@ -424,6 +424,12 @@ public class Contest {
 							+ "it has begun!");
 				} else {
 					t.removeUser(u);
+					try {
+						SheetsIntegration.saveContest(this);
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 					return t.getName();
 				}
 			}
