@@ -563,10 +563,10 @@ class Timeslot {
 				+ "have written the question and page number on each sheet of your contest paper, and "
 				+ "that your User ID/Username is not written anywhere on your contest paper. ", 
 				"5 minutes left reminder", this.endTime.minus(Duration.ofMinutes(5))));
-		schedule.add(new ReminderTask(this, "The contest is over. Please submit your solutions to the form "
-				+ "given in " + formLink + ". Thank you for participating in this contest! Further instructions "
-				+ "are available in the form. ", "Contest end reminder",
-				this.endTime));
+		schedule.add(new ReminderTask(this, "The contest is over. Please submit your solutions to this form "
+				+ "within 1 day of your timeslot ending: <" + formLink + ">. Further instructions are "
+				+ "available in the form.\n\nThank you for participating in this contest!",
+				"Contest end reminder", this.endTime));
 		schedule.add(new AssignRolesTask(this, this.roleId, "Assign Now Competing roles", this.startTime));
 		schedule.add(new AssignRolesTask(this, this.finishedRoleId, "Assign finished roles", this.endTime));
 		schedule.add(new RemoveRolesTask(this, "Remove now competing roles", this.endTime.plus(Duration.ofSeconds(5))));
