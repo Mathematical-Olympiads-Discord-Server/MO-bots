@@ -376,8 +376,12 @@ public class Contest {
 			if (t.getUsers().contains(u)) 
 				throw new IllegalArgumentException("Already signed up for this contest. ");
 			
-			if (t.getName().contentEquals(timeslot)) 
+			if (t.getName().contentEquals(timeslot)) {
 				timeslotPlace = timeslots.indexOf(t);
+				if (t.getStartInstant().isBefore(Instant.now())) {
+					throw new IllegalArgumentException("Cannot sign up after the contest has started. ");
+				}
+			} 
 		}
 		
 		if (timeslotPlace == -1) { // If timeslotPlace was not changed then the timeslot doesn't exist. 
