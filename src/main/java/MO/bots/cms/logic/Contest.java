@@ -17,6 +17,7 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 import MO.bots.shared.SheetsIntegration;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageReaction;
 import net.dv8tion.jda.core.entities.Role;
@@ -230,7 +231,13 @@ public class Contest {
 	 * @param userID The ID of the user to be added. 
 	 */
 	public void addContestant(MessageReceivedEvent event, String timeslotName, long userID) {
-		User contestant = event.getGuild().getMemberById(userID).getUser();
+		Member cMember = event.getGuild().getMemberById(userID);
+		User contestant;
+		if (cMember == null) {
+			return;
+		} else {
+			contestant = cMember.getUser();
+		}
 		for (Timeslot t : timeslots) {
 			if (t.getName().contentEquals(timeslotName)) {
 				t.addUser(contestant);
