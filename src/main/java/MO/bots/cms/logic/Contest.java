@@ -585,6 +585,18 @@ class Timeslot {
 		schedule.add(new AssignRolesTask(this, this.roleId, "Assign Now Competing roles", this.startTime));
 		schedule.add(new AssignRolesTask(this, this.finishedRoleId, "Assign finished roles", this.endTime));
 		schedule.add(new RemoveRolesTask(this, "Remove now competing roles", this.endTime.plus(Duration.ofSeconds(5))));
+		schedule.add(new ReminderTask(this, "There are 3 hours left to submit scripts. If you wish to have a later submission"
+				+ " deadline, that can be negotiated by DMing Staff Mail. Otherwise, note that failure to submit"
+				+ " scripts will result in a ban from contests up to and including the next same-level contest. Although"
+				+ " the form is open after 1 day to allow people from later timeslots to submit scripts, we reserve"
+				+ " the right to not accept scripts submitted after this deadline. ", 
+						"submit scripts reminder", this.endTime.plus(Duration.ofHours(21))));
+		schedule.add(new ReminderTask(this, "There is 1 hour left to submit scripts. If you wish to have a later submission"
+				+ " deadline, that can be negotiated by DMing Staff Mail. Otherwise, note that failure to submit"
+				+ " scripts will result in a ban from contests up to and including the next same-level contest. Although"
+				+ " the form is open after 1 day to allow people from later timeslots to submit scripts, we reserve"
+				+ " the right to not accept scripts submitted after this deadline. ", 
+						"submit scripts reminder", this.endTime.plus(Duration.ofHours(23))));
 		
 		/*
 		beforeContestReminder = new ReminderTask(this, "15 minutes left before the contest starts. "
