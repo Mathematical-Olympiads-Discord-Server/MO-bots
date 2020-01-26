@@ -24,7 +24,6 @@ public class HomeworkCommand extends Command{
 	
 	@Override
 	public void execute (CommandEvent event) {
-		event.getMessage().delete().queue();
 		event.reply(message);
 	}
 
