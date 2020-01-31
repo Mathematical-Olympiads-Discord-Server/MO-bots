@@ -43,6 +43,7 @@ public class PotdCommand extends CommandWithLogging {
 		this.requiredRole = MainClass.managerRole;
 		
 		curators.put("nya10", 174175867268759553L);
+		curators.put("Adam", 467223085586579457L);
 		curators.put("brainysmurfs", 281300961312374785L);
 		curators.put("Daniel", 118831126239248397L);
 		curators.put("Tony", 541318134699786272L);
