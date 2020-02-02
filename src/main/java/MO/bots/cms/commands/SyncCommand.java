@@ -21,6 +21,7 @@ public class SyncCommand extends CommandWithLogging {
 		this.name = "sync";
 		this.help = "Admin command - syncs with Sheet";
 		this.arguments = "position <optional>";
+		this.aliases = new String[] {"bottosheet"};
 		this.requiredRole = MainClass.managerRole;
 	}
 

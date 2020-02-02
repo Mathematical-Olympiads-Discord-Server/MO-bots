@@ -10,6 +10,7 @@ public class ReloadContestCommand extends CommandWithLogging {
 	public ReloadContestCommand() {
 		this.name = "reload";
 		this.arguments = "position(0-indexed)";
+		this.aliases = new String[] {"sheettobot"};
 		this.requiredRole = MainClass.managerRole;
 		this.help = "Admin Command - Re-loads a contest from a sheet. Note that this will over"
 				+ "ride **all** data in the contest - so please +sync first if"
