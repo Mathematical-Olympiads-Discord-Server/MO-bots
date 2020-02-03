@@ -19,14 +19,14 @@ public class Verification extends ListenerAdapter {
 					event.getMember(), event.getGuild().getRolesByName("unverified", true)).complete();
 			
 			Message m = event.getTextChannel().getMessageById(event.getMessageId()).complete();
-			m.getReactions().get(0).removeReaction(event.getUser());
+			m.getReactions().get(0).removeReaction(event.getUser()).complete();
 			
 			event.getGuild().getTextChannelById(WELCOME_CHANNEL_ID).sendMessage(
 					"Welcome to the Mathematical Olympiads Discord server "
 					+ event.getUser().getAsMention() 
 					+ "! Check out the self-assignable roles in " 
 					+ event.getGuild().getTextChannelById(ROLES_ID).getAsMention()
-					+ "and enjoy your time here. :smile:");
+					+ "and enjoy your time here. :smile:").complete();
 			
 			System.out.println("Verified " + event.getUser().toString() + " at " + Instant.now().toString());
 			
