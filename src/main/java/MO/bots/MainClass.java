@@ -22,10 +22,13 @@ import MO.bots.modsbot.commands.PunishmentViewCommand;
 import MO.bots.modsbot.commands.RecordStatsCommand;
 import MO.bots.modsbot.commands.RetSampleCommand;
 import MO.bots.modsbot.commands.SampleCommand;
+import MO.bots.modsbot.commands.Verification;
 import MO.bots.modsbot.commands.VerifyCommand;
 import MO.bots.potd.commands.PotdCommand;
 import MO.bots.potd.commands.PotdViewCommand;
+import MO.bots.shared.Initialisation;
 import net.dv8tion.jda.core.AccountType;
+import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
 
 public class MainClass {
@@ -77,6 +80,9 @@ public class MainClass {
 	
 	public static SampleManager sm;
 	
+	public static JDA MODSbot;
+	public static JDA CMSbot;
+	
 	public static void main (String[] args) throws LoginException {
 		sm = new SampleManager();
 		CommandClientBuilder cmsBuilder = new CommandClientBuilder();
@@ -114,7 +120,7 @@ public class MainClass {
 		cms.addEventListener(sm);
 		cms.addEventListener(new AutoLoad());
 		//cms.addEventListener(new AutoAddContestant());
-		cms.build();
+		CMSbot = cms.build();
 		
 		CommandClientBuilder modsBotBuilder = new CommandClientBuilder();
 		modsBotBuilder.setPrefix("-");
@@ -139,6 +145,8 @@ public class MainClass {
 		modsBot.setToken(token);
 		modsBot.addEventListener(modsBotBuilder.build());
 		modsBot.addEventListener(new AutoResponse());
+		modsBot.addEventListener(new Initialisation());
+		modsBot.addEventListener(new Verification());
 		//modsBot.addEventListener(new AutoDelete());
 		modsBot.build();
 	}
