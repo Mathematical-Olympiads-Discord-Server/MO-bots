@@ -8,14 +8,14 @@ import net.dv8tion.jda.core.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
 public class Verification extends ListenerAdapter {
-	private static final long MESSAGE_ID = 672964993146421249L;
+	private static final long INFO_CHANNEL_ID = 672964993146421249L;
 	private static final long WELCOME_CHANNEL_ID = 533153217119387660L;
 	private static final long ROLES_ID = 671639229293395978L;
 	
 	
 	@Override
     public void onMessageReactionAdd(MessageReactionAddEvent event) {
-		if (event.getMessageIdLong() == MESSAGE_ID) {
+		if (event.getTextChannel().getIdLong() == INFO_CHANNEL_ID) {
 			Message m = event.getTextChannel().getMessageById(event.getMessageId()).complete();
 			m.getReactions().get(0).removeReaction(event.getUser()).complete();
 			
