@@ -26,7 +26,7 @@ public class Verification extends ListenerAdapter {
 						event.getMember(), event.getGuild().getRolesByName("unverified", true)).complete();
 				
 				event.getGuild().getTextChannelById(WELCOME_CHANNEL_ID).sendMessage(
-						"Welcome to the Mathematical Olympiads Discord server "
+						"Welcome to the Mathematical Olympiads Discord Server "
 						+ event.getUser().getAsMention() 
 						+ "! Check out the self-assignable roles in " 
 						+ event.getGuild().getTextChannelById(ROLES_ID).getAsMention()
