@@ -35,7 +35,7 @@ import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
 public class PotdCommand extends CommandWithLogging {
 	static final String SPREADSHEET_ID = "10X0-CCSv7FenZP1YaKlDSE-PD4LSZAgpzT5Rs9F8hvA"; //CONFIG
-	private Map<String, Long> curators = new HashMap<String, Long>(); 
+	protected static Map<String, Long> curators = new HashMap<String, Long>(); 
 	
 	public PotdCommand() {
 		this.name = "potd";
@@ -46,6 +46,7 @@ public class PotdCommand extends CommandWithLogging {
 		curators.put("Adam", 467223085586579457L);
 		curators.put("brainysmurfs", 281300961312374785L);
 		curators.put("Daniel", 118831126239248397L);
+		curators.put("12345678", 677267568435658787L);
 		curators.put("Tony", 541318134699786272L);
 		curators.put("Sharky", 268970368524484609L);
 		curators.put("Will", 429525897167765505L);
