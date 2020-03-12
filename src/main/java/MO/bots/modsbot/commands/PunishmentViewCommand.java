@@ -25,7 +25,7 @@ public class PunishmentViewCommand extends CommandWithLogging {
 	protected void exec(CommandEvent event) {
 		List<List<Object>> punishments;
 		try {
-			punishments = SheetsIntegration.getSheet(PUNISHMENT_SHEET, "Sheet1", "Sheet1!A1:G");
+			punishments = SheetsIntegration.getSheet(PUNISHMENT_SHEET, "Sheet1", "Sheet1!A3:G");
 		} catch (GeneralSecurityException | IOException e) {
 			event.reply("Error, check logs");
 			return;
