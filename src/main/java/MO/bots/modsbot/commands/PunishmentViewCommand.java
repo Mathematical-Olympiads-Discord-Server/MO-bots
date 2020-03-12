@@ -15,19 +15,10 @@ import MO.bots.shared.SheetsIntegration;
 public class PunishmentViewCommand extends CommandWithLogging {
 	private static final String PUNISHMENT_SHEET = "1BztOVh1_VmtqbkkOwitUTnS_Pqaa3hs5wfHkDaie3FQ";
 	
-	private static Map<Integer, String> punishmentNames;
-	
 	public PunishmentViewCommand() {
 		this.name = "punishments";
 		this.help = "Shows punishments of a user. ";
 		this.requiredRole = MainClass.managerRole;
-		
-		punishmentNames = new HashMap<Integer, String>();
-		punishmentNames.put(0, "Unofficial Warning");
-		punishmentNames.put(1, "Official Warning");
-		punishmentNames.put(2, "Mute");
-		punishmentNames.put(3, "Kick");
-		punishmentNames.put(4, "Ban");
 	}
 	
 	@Override
@@ -44,16 +35,18 @@ public class PunishmentViewCommand extends CommandWithLogging {
 		final String DEFAULT_RESPONSE = "Punishments for " + event.getGuild().getMemberById(userId).getUser().getName() + ":```";
 		StringBuilder response = new StringBuilder(DEFAULT_RESPONSE);
 		for (List<Object> punishment : punishments) {
-			String currentUserId = (String) punishment.get(1);
+			String currentUserId = (String) punishment.get(2);
 			if (currentUserId.contentEquals(userId)) {
-				response.append(punishmentNames.get(Integer.parseInt((String) punishment.get(2))))
+				response.append("Log #")
+						.append(punishment.get(0))
+						.append(":\t")
+						.append(punishment.get(4))
 						.append(" at ")
-						.append((String) punishment.get(3))
+						.append(punishment.get(1))
 						.append(" by ")
-						.append((String) punishment.get(5))
-						.append(". Reason: ")
-						.append((String) punishment.get(6))
-						.append("\n");
+						.append(punishment.get(5))
+						.append(" for ")
+						.append(punishment.get(6));
 			}
 		}
 		
