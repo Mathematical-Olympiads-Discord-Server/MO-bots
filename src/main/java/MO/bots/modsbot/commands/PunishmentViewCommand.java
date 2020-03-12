@@ -46,7 +46,7 @@ public class PunishmentViewCommand extends CommandWithLogging {
 						.append(" by ")
 						.append(punishment.get(5))
 						.append(" for ")
-						.append(punishment.get(6));
+						.append(punishment.get(6)).append("\n");
 			}
 		}
 		
