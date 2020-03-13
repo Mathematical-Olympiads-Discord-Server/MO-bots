@@ -17,7 +17,7 @@ import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
 public class PotdViewCommand extends CommandWithLogging {
 	static final String SPREADSHEET_ID = "10X0-CCSv7FenZP1YaKlDSE-PD4LSZAgpzT5Rs9F8hvA"; //CONFIG
-	private Map<String, Long> curators = new HashMap<String, Long>(); 
+	protected Map<String, Long> curators = new HashMap<String, Long>(); 
 	
 	@Override
 	protected void execute(CommandEvent event) {
@@ -38,7 +38,7 @@ public class PotdViewCommand extends CommandWithLogging {
 	public void exec (CommandEvent event) {
 		try {
 			List<List<Object>> potdSheet = SheetsIntegration
-					.getSheet(SPREADSHEET_ID, "History", "A2:I");
+					.getSheet(SPREADSHEET_ID, "History!A2:I");
 			int requestedPotd = Integer.parseInt(event.getArgs());
 			
 			//Get current potd number

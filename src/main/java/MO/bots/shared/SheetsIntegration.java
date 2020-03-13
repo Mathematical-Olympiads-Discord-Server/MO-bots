@@ -251,7 +251,7 @@ public class SheetsIntegration {
      * @throws GeneralSecurityException
      * @throws IOException
      */
-    public static List<List<Object>> getSheet(String spreadsheetId, String sheetName, String range) 
+    public static List<List<Object>> getSheet(String spreadsheetId, String range) 
     		throws GeneralSecurityException, IOException {
     	final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
     	

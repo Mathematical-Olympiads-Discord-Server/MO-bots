@@ -58,7 +58,7 @@ public class PotdCommand extends CommandWithLogging {
 	protected void exec(CommandEvent event) {
 		try {
 			List<List<Object>> potdSheet = SheetsIntegration
-					.getSheet(SPREADSHEET_ID, "History", "A2:I");
+					.getSheet(SPREADSHEET_ID, "History!A2:I");
 			int requestedPotd = Integer.parseInt(event.getArgs());
 			
 			//Get current potd number
