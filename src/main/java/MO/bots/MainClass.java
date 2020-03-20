@@ -128,7 +128,6 @@ public class MainClass {
 		modsBotBuilder.setOwnerId("281300961312374785");
 		modsBotBuilder.setHelpConsumer(help);
 		modsBotBuilder.addCommands(
-				new HomeworkCommand(),
 				new PingCommand(),
 				new PotdCommand(),
 				new PingRoleCommand(),
