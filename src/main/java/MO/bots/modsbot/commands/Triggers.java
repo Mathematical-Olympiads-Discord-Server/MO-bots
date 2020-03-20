@@ -18,6 +18,14 @@ public class Triggers extends ListenerAdapter {
 		
 		toReply.put("-hdigh", "You can find the blog \"hdigh\" at https://how-did-i-get-here.com");
 		
+		toReply.put("-resources", "-  MODS Resources — http://bit.ly/mods-resources\r\n" + 
+				"-  A list of useful theorems and proof techniques — http://bit.ly/MO_things_to_know\r\n" + 
+				"-  how did I get here? — https://how-did-i-get-here.com/olympiad\r\n" + 
+				"-  An IMO results visualiser — http://olivernash.org/2017/08/05/visualising-imo-results/index.html?2017-1\r\n" + 
+				"-  Study Groups Portal by @Jem — https://discord.gg/BfUysmw");
+		
+		toReply.put("-dropbox", "Dropbox containing handouts from national camps and elsewhere: "
+				+ "https://www.dropbox.com/sh/w9mfy9qtjs68xzc/AADnnQKWONBsboMGVDiuS-kAa?dl=0");
 	}
 	
 	@Override
