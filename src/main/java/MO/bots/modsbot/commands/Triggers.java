@@ -22,8 +22,8 @@ public class Triggers extends ListenerAdapter {
 	
 	@Override
 	public void onMessageReceived (MessageReceivedEvent event) {
-		if (toReply.get(event.getMessage()) != null) {
-			event.getChannel().sendMessage(toReply.get(event.getMessage())).complete();
+		if (toReply.get(event.getMessage().getContentRaw()) != null) {
+			event.getChannel().sendMessage(toReply.get(event.getMessage().getContentRaw())).complete();
 		}
 	}
 }
