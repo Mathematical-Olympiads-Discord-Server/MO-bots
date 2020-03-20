@@ -17,11 +17,11 @@ import MO.bots.general.sampling.SampleManager;
 import MO.bots.modsbot.commands.AutoDelete;
 import MO.bots.modsbot.commands.AutoResponse;
 import MO.bots.modsbot.commands.EchoCommand;
-import MO.bots.modsbot.commands.HomeworkCommand;
 import MO.bots.modsbot.commands.PunishmentViewCommand;
 import MO.bots.modsbot.commands.RecordStatsCommand;
 import MO.bots.modsbot.commands.RetSampleCommand;
 import MO.bots.modsbot.commands.SampleCommand;
+import MO.bots.modsbot.commands.Triggers;
 import MO.bots.modsbot.commands.Verification;
 import MO.bots.modsbot.commands.VerifyCommand;
 import MO.bots.potd.commands.PotdCommand;
@@ -147,6 +147,7 @@ public class MainClass {
 		modsBot.addEventListener(new AutoResponse());
 		modsBot.addEventListener(new Initialisation());
 		modsBot.addEventListener(new Verification());
+		modsBot.addEventListener(new Triggers());
 		//modsBot.addEventListener(new AutoDelete());
 		modsBot.build();
 	}
