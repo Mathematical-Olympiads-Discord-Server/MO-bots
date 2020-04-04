@@ -25,7 +25,7 @@ public class SignupCommand extends CommandWithLogging {
 			args = new String[] {args[0], ""};
 		
 		try {
-			ContestsManager.signupContestant(event.getAuthor(), args[0], args[1]);
+			ContestsManager.signupContestant(event.getAuthor(), args[0], args[1], !event.getArgs().contains("-unofficial"));
 			event.reply("Done. Use +when to check your current signups. ");
 			//Assign roles
 			Member contestant = event.getGuild().getMember(event.getAuthor());

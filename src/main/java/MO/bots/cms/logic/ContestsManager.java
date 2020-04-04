@@ -257,10 +257,10 @@ public class ContestsManager {
 	 * do not make sense (i.e. already signed up, no matching contest
 	 * name, etc)
 	 */
-	public static void signupContestant (User u, String contest, String timeslot) throws IllegalArgumentException {
+	public static void signupContestant (User u, String contest, String timeslot, boolean official) throws IllegalArgumentException {
 		for (Contest c : currentContests) {
 			if (c.getName().contentEquals(contest)) {
-				c.signupUser(u, timeslot);
+				c.signupUser(u, timeslot, official);
 				return;
 			}
 		}

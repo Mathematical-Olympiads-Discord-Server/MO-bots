@@ -81,7 +81,7 @@ public class SheetsIntegration {
     	final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
     	final String timeslotsRange = TIMESLOTS_SHEET_NAME + "!A2:E";
     	final String generalInfoRange = INFO_SHEET_NAME + "!A2:H";
-    	final String usersRange = USERS_SHEET_NAME + "!A2:C";
+    	final String usersRange = USERS_SHEET_NAME + "!A2:D";
     	
     	Sheets service = new Sheets.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
     			.setApplicationName(APPLICATION_NAME).build();
@@ -119,7 +119,7 @@ public class SheetsIntegration {
     		}
     		if (users != null) {
     			for (List<Object> user : users) {
-    				c.addContestant(event, (String) user.get(2), Long.parseLong((String) user.get(1)));
+    				c.addContestant(event, (String) user.get(2), Long.parseLong((String) user.get(1)), ((String) user.get(3)).equals("OFFICIAL"));
     			}
     		}
     		return c;
@@ -138,7 +138,7 @@ public class SheetsIntegration {
      * @throws IOException 
      * @throws GeneralSecurityException 
      */
-    public static void appendUser (Contest c, User u, String timeslotName) throws GeneralSecurityException, IOException {
+    public static void appendUser (Contest c, User u, String timeslotName, boolean official) throws GeneralSecurityException, IOException {
     	final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
     	Sheets service = new Sheets.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
     			.setApplicationName(APPLICATION_NAME).build();
@@ -148,7 +148,8 @@ public class SheetsIntegration {
     				Arrays.asList(
     						u.getName() + "#" + u.getDiscriminator(),
     						u.getId(), 
-    						timeslotName
+    						timeslotName,
+    						official ? "OFFICIAL" : "UNOFFICIAL"
     					)
     			);
     	
@@ -197,7 +198,7 @@ public class SheetsIntegration {
     	ValueRange timeslotsRange = new ValueRange().setValues(timeslots).setRange(TIMESLOTS_SHEET_NAME + "!A2:D");
     	
     	List<List<Object>> users = c.getUserInfoAsList();
-    	ValueRange usersRange = new ValueRange().setValues(users).setRange(USERS_SHEET_NAME + "!A2:C");
+    	ValueRange usersRange = new ValueRange().setValues(users).setRange(USERS_SHEET_NAME + "!A2:D");
     	
     	List<ValueRange> data = new ArrayList<ValueRange>(3);
     	data.add(infoRange);

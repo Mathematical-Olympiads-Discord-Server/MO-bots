@@ -173,7 +173,11 @@ public class Contest {
 		for (Timeslot t : timeslots) {
 			for (User u : t.getUsers()) {
 				toReturn.add(Arrays.asList(u.getName() + "#" + u.getDiscriminator(), 
-						u.getId(), t.getName()));
+						u.getId(), t.getName(), "OFFICIAL"));
+			}
+			for (User u : t.getUnofficialUsers()) {
+				toReturn.add(Arrays.asList(u.getName() + "#" + u.getDiscriminator(), 
+						u.getId(), t.getName(), "UNOFFICIAL"));
 			}
 		}
 		
@@ -193,10 +197,10 @@ public class Contest {
 		boolean addedAUser = false;
 		for (Timeslot t : timeslots) {
 			if (t.getReactionId() == event.getReactionEmote().getIdLong()) {
-				t.addUser(event.getUser());
+				t.addUser(event.getUser(), true);
 				if (spreadsheetId != null) 
 				try {
-					SheetsIntegration.appendUser(this, event.getUser(), t.getName());
+					SheetsIntegration.appendUser(this, event.getUser(), t.getName(), true);
 				} catch (GeneralSecurityException e) {
 					e.printStackTrace();
 				} catch (IOException e) {
@@ -230,7 +234,7 @@ public class Contest {
 	 * @param timeslotName Name of the timeslot
 	 * @param userID The ID of the user to be added. 
 	 */
-	public void addContestant(MessageReceivedEvent event, String timeslotName, long userID) {
+	public void addContestant(MessageReceivedEvent event, String timeslotName, long userID, boolean official) {
 		Member cMember = event.getGuild().getMemberById(userID);
 		User contestant;
 		if (cMember == null) {
@@ -240,7 +244,7 @@ public class Contest {
 		}
 		for (Timeslot t : timeslots) {
 			if (t.getName().contentEquals(timeslotName)) {
-				t.addUser(contestant);
+				t.addUser(contestant, official);
 				return;
 			}
 		}
@@ -319,7 +323,7 @@ public class Contest {
 			for (MessageReaction r : reactions) {
 				if (r.getReactionEmote().getIdLong() == currentID) {
 					List<User> reactedUsers = r.getUsers().complete();
-					for (User u : reactedUsers) {t.addUser(u);}
+					for (User u : reactedUsers) {t.addUser(u, true);}
 				} 
 			}
 		}
@@ -365,6 +369,19 @@ public class Contest {
 					.append(Instant.now().until(t.getStartInstant(), ChronoUnit.MINUTES)%60)
 					.append(" minutes.");
 			}
+			if (t.getUnofficialUsers().contains(u)) {
+				sb.append(t.getName())
+				.append(" at ")
+				.append(t.getStartInstant().toString())
+				.append(" in ")
+				.append(Instant.now().until(t.getStartInstant(), ChronoUnit.DAYS))
+				.append(" days, ")
+				.append(Instant.now().until(t.getStartInstant(), ChronoUnit.HOURS)%24)
+				.append(" hours, and ")
+				.append(Instant.now().until(t.getStartInstant(), ChronoUnit.MINUTES)%60)
+				.append(" minutes.")
+				.append(" [UNOFFICIAL] ");
+			}
 		}
 		
 		return sb.toString();
@@ -376,11 +393,11 @@ public class Contest {
 	 * @param timeslot String representing the name of the timeslot. 
 	 * @throws IllegalArgumentException if an illegal argument has been passed in. 
 	 */
-	public void signupUser(User u, String timeslot) throws IllegalArgumentException {
+	public void signupUser(User u, String timeslot, boolean official) throws IllegalArgumentException {
 		//Check that the user is not signed up yet
 		int timeslotPlace = -1;		
 		for (Timeslot t : timeslots) {
-			if (t.getUsers().contains(u)) 
+			if (t.getUsers().contains(u) || t.getUnofficialUsers().contains(u)) 
 				throw new IllegalArgumentException("Already signed up for this contest. ");
 			
 			if (t.getName().contentEquals(timeslot)) {
@@ -410,9 +427,9 @@ public class Contest {
 			throw new IllegalArgumentException(exceptionString.toString());
 		}
 		
-		this.timeslots.get(timeslotPlace).addUser(u);
+		this.timeslots.get(timeslotPlace).addUser(u, official);
 		try {
-			SheetsIntegration.appendUser(this, u, this.timeslots.get(timeslotPlace).getName());
+			SheetsIntegration.appendUser(this, u, this.timeslots.get(timeslotPlace).getName(), official);
 		} catch (GeneralSecurityException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -465,6 +482,7 @@ public class Contest {
 		ArrayList<User> users = new ArrayList<User>(30);
 		for (Timeslot t : timeslots) {
 			users.addAll(t.getUsers());
+			users.addAll(t.getUnofficialUsers());
 		}
 		return users;
 	}
@@ -489,6 +507,9 @@ class Timeslot {
 	 */
 	private ArrayList<User> users;
 	public ArrayList<User> getUsers() {return this.users;}
+	
+	private ArrayList<User> unofficialUsers;
+	public ArrayList<User> getUnofficialUsers() {return this.unofficialUsers;}
 	
 	private String name;
 	public String getName() {return name;}
@@ -535,7 +556,8 @@ class Timeslot {
 		this.startTime = startTime;
 		this.endTime = endTime;
 		this.reactionID = reaction;
-		users = new ArrayList<User>();
+		this.users = new ArrayList<User>();
+		this.unofficialUsers = new ArrayList<User>();
 		this.contestGuild = g;
 		this.roleId = roleId;
 		this.finishedRoleId = finishedRoleId;
@@ -548,7 +570,7 @@ class Timeslot {
 				+ "not sit the contest anymore, please cancel before your timeslot. Sitting"
 				+ " a timeslot without submitting scripts will result in a 3-month ban "
 				+ "(up to and including the next same-level contest). "
-					, "1 day reminder", this.startTime.minus(Duration.ofDays(1))));
+					, "1 day reminder", this.startTime.minus(Duration.ofDays(1)), WhoToPing.OFFICIAL));
 		
 		if (!this.isCustomTimeslot) {
 			schedule.add(new AllowConnectionTask(this, "Allow participants to join VC", this.startTime.minus(Duration.ofMinutes(15)),
@@ -558,30 +580,33 @@ class Timeslot {
 			schedule.add(new ReminderTask(this, "15 minutes left before the contest starts. Please head "
 					+ "to the Contest Room VC soon. Please also prepare the following materials: "
 					+ "Blank A4 Paper, Pen, Pencil, Compass and Ruler. You can now join Contest Room VC. ", 
-					"before contest reminder", this.startTime.minus(Duration.ofMinutes(15))));
+					"before contest reminder", this.startTime.minus(Duration.ofMinutes(15)), WhoToPing.BOTH));
 			
 		} else {
 			schedule.add(new ReminderTask(this, "15 minutes left before the contest starts. Note that since "
 					+ "this is a custom timeslot, you do not need to join Contest Room VC. Please also prepare the "
 					+ "following materials: Blank A4 Paper, Pen, Pencil, Compass and Ruler.", "before contest reminder",
-					this.startTime.minus(Duration.ofMinutes(15))));
+					this.startTime.minus(Duration.ofMinutes(15)), WhoToPing.BOTH));
 		}
 		
 		schedule.add(new ReminderTask(this, "5 minutes left before the contest starts. Please head "
-				+ "to the Contest Room VC soon. ", "before contest reminder 2", this.startTime.minus(Duration.ofMinutes(5))));
+				+ "to the Contest Room VC soon. ", "before contest reminder 2", this.startTime.minus(Duration.ofMinutes(5)), WhoToPing.BOTH));
 		schedule.add(new ReminderTask(this, "The contest has started - you may now look at the contest paper and "
 				+ "begin working on the problems. If there is any issue please contact Staff Mail at the "
-				+ "top of the server memberlist. ", "Contest Start Reminder", this.startTime));
+				+ "top of the server memberlist. ", "Contest Start Reminder", this.startTime, WhoToPing.BOTH));
 		schedule.add(new ReminderTask(this, "30 minutes left before the contest ends. ", 
-				"30 minutes left reminder", this.endTime.minus(Duration.ofMinutes(30))));
+				"30 minutes left reminder", this.endTime.minus(Duration.ofMinutes(30)), WhoToPing.BOTH));
 		schedule.add(new ReminderTask(this, "5 minutes left before the contest ends. Please make sure to "
 				+ "have written the question and page number on each sheet of your contest paper, and "
 				+ "that your User ID/Username is not written anywhere on your contest paper. ", 
-				"5 minutes left reminder", this.endTime.minus(Duration.ofMinutes(5))));
+				"5 minutes left reminder", this.endTime.minus(Duration.ofMinutes(5)), WhoToPing.OFFICIAL));
+		schedule.add(new ReminderTask(this, "5 minutes left before the contest ends. ", "5 minues left reminder (unofficial)",
+				this.endTime.minus(Duration.ofMinutes(5)), WhoToPing.UNOFFICIAL));
 		schedule.add(new ReminderTask(this, "The contest is over. Please submit your solutions to this form "
 				+ "within 1 day of your timeslot ending: <" + formLink + ">. Further instructions are "
 				+ "available in the form.\n\nThank you for participating in this contest!",
-				"Contest end reminder", this.endTime));
+				"Contest end reminder", this.endTime, WhoToPing.OFFICIAL));
+		schedule.add(new ReminderTask(this, "The contest is over. ", "Contest end reminder (unofficial)", this.endTime, WhoToPing.UNOFFICIAL));
 		schedule.add(new AssignRolesTask(this, this.roleId, "Assign Now Competing roles", this.startTime));
 		schedule.add(new AssignRolesTask(this, this.finishedRoleId, "Assign finished roles", this.endTime));
 		schedule.add(new RemoveRolesTask(this, "Remove now competing roles", this.endTime.plus(Duration.ofSeconds(5))));
@@ -590,13 +615,13 @@ class Timeslot {
 				+ " scripts will result in a ban from contests up to and including the next same-level contest. Although"
 				+ " the form is open after 1 day to allow people from later timeslots to submit scripts, we reserve"
 				+ " the right to not accept scripts submitted after this deadline. ", 
-						"submit scripts reminder", this.endTime.plus(Duration.ofHours(21))));
+						"submit scripts reminder", this.endTime.plus(Duration.ofHours(21)), WhoToPing.OFFICIAL));
 		schedule.add(new ReminderTask(this, "There is 1 hour left to submit scripts. If you wish to have a later submission"
 				+ " deadline, that can be negotiated by DMing Staff Mail. Otherwise, note that failure to submit"
 				+ " scripts will result in a ban from contests up to and including the next same-level contest. Although"
 				+ " the form is open after 1 day to allow people from later timeslots to submit scripts, we reserve"
 				+ " the right to not accept scripts submitted after this deadline. ", 
-						"submit scripts reminder", this.endTime.plus(Duration.ofHours(23))));
+						"submit scripts reminder", this.endTime.plus(Duration.ofHours(23)), WhoToPing.OFFICIAL));
 		
 		/*
 		beforeContestReminder = new ReminderTask(this, "15 minutes left before the contest starts. "
@@ -642,8 +667,12 @@ class Timeslot {
 	 * Adds one user
 	 * @param u the user to add
 	 */
-	public void addUser(User u) {
-		users.add(u);
+	public void addUser(User u, boolean official) {
+		if (official) {
+			this.users.add(u);
+		} else {
+			this.unofficialUsers.add(u);
+		}
 	}
 		
 	/**
@@ -681,10 +710,14 @@ class Timeslot {
 		sb.append(" tied to reaction ");
 		sb.append(this.reactionID);
 		if (level == 2) {
-			sb.append(" with participants:");
+			sb.append(" with official participants:");
 			for (User u : users) {
 				sb.append(" ");
 				sb.append(u.toString());
+			}
+			sb.append(" and unofficial participants:");
+			for (User u : unofficialUsers) {
+				sb.append(" ").append(u.toString());
 			}
 		}
 		sb.append(".");
@@ -723,21 +756,41 @@ abstract class TimerTaskWithSchedule extends TimerTask implements Comparable<Tim
 	}
 }
 
+enum WhoToPing {
+	OFFICIAL,
+	UNOFFICIAL,
+	BOTH
+}
+
 class ReminderTask extends TimerTaskWithSchedule {
 	private String remindMessage;
+	private WhoToPing wtp;
 	
-	public ReminderTask(Timeslot t, String remindMessage, String name, Instant schedule) {
+	public ReminderTask(Timeslot t, String remindMessage, String name, Instant schedule, WhoToPing wtp) {
 		this.tiedTimeslot = t;
 		this.remindMessage = remindMessage;
 		this.name = name;
 		this.schedule = schedule;
+		this.wtp = wtp;
 	}
 	
 	@Override
 	public void run() {
 		System.out.print("Reminder task is running. Printing ");
 		System.out.println(remindMessage);
-		for (User u : tiedTimeslot.getUsers()) {
+		List<User> toPing = null;
+		switch (this.wtp) {
+		case OFFICIAL:
+			toPing = new ArrayList<>(this.tiedTimeslot.getUsers());
+			break;
+		case UNOFFICIAL:
+			toPing = new ArrayList<>(this.tiedTimeslot.getUnofficialUsers());
+			break;
+		case BOTH:
+			toPing = new ArrayList<>(this.tiedTimeslot.getUsers());
+			toPing.addAll(this.tiedTimeslot.getUnofficialUsers());
+		}
+		for (User u : toPing) {
 			u.openPrivateChannel().complete().sendMessage(remindMessage).queue();
 			System.out.printf("Sent to %s (id: %s)\n", u.getName(), u.getId());
 		}
