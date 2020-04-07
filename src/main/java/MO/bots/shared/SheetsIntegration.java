@@ -210,7 +210,7 @@ public class SheetsIntegration {
     	service.spreadsheets().values().clear(c.getSpreadsheetId(), 
     			TIMESLOTS_SHEET_NAME + "!A2:D", new ClearValuesRequest()).execute();
     	service.spreadsheets().values().clear(c.getSpreadsheetId(), 
-    			USERS_SHEET_NAME + "!A2:C", new ClearValuesRequest()).execute();
+    			USERS_SHEET_NAME + "!A2:D", new ClearValuesRequest()).execute();
     	
     	BatchUpdateValuesRequest req = new BatchUpdateValuesRequest()
     			.setValueInputOption("USER_ENTERED").setData(data);

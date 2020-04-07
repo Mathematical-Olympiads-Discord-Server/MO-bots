@@ -446,7 +446,7 @@ public class Contest {
 	 */
 	public String removeUser(User u) throws IllegalArgumentException {
 		for (Timeslot t : timeslots) {
-			if (t.getUsers().contains(u)) {
+			if (t.getAllUsers().contains(u)) {
 				if (t.getStartInstant().isBefore(Instant.now())) {
 					throw new IllegalArgumentException("Cannot cancel a timeslot after "
 							+ "it has begun!");
@@ -510,6 +510,12 @@ class Timeslot {
 	
 	private ArrayList<User> unofficialUsers;
 	public ArrayList<User> getUnofficialUsers() {return this.unofficialUsers;}
+	
+	public ArrayList<User> getAllUsers() {
+		ArrayList<User> toReturn = new ArrayList<User>(this.users);
+		toReturn.addAll(this.unofficialUsers);
+		return toReturn;
+	}
 	
 	private String name;
 	public String getName() {return name;}
@@ -734,6 +740,7 @@ class Timeslot {
 
 	public void removeUser (User u) {
 		this.users.remove(u);
+		this.unofficialUsers.remove(u);
 	}
 }
 
