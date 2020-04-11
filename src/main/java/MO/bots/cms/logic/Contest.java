@@ -845,6 +845,12 @@ class AssignRolesTask extends TimerTaskWithSchedule {
 					System.out.printf("Assigned role %s (id: %s) to %s\n", toAdd.getName(), toAdd.getId(), u.getName());
 				});
 		}
+		for (User u : tiedTimeslot.getUnofficialUsers()) {
+			tiedTimeslot.getContestGuild().getController()
+				.addRolesToMember(tiedTimeslot.getContestGuild().getMember(u), toAdd).queue((Void) -> {
+					System.out.printf("Assigned role %s (id: %s) to %s\n", toAdd.getName(), toAdd.getId(), u.getName());
+				});
+		}
 		System.out.println();
 	}
 	
@@ -866,6 +872,13 @@ class RemoveRolesTask extends TimerTaskWithSchedule {
 		System.out.println("RemoveRolesTask task is running. ");
 		Role toRemove = this.tiedTimeslot.getContestGuild().getRoleById(tiedTimeslot.getRoleId());
 		for (User u : tiedTimeslot.getUsers()) {
+			System.out.printf("Removing role %s (id: %s, args) from %s\n", toRemove.getName(), toRemove.getId(), u.getName());
+			tiedTimeslot.getContestGuild().getController()
+				.removeRolesFromMember(tiedTimeslot.getContestGuild().getMember(u), toRemove).queue((Void) -> {
+					System.out.printf("Removed role %s (id: %s) from %s\n", toRemove.getName(), toRemove.getId(), u.getName());
+				});
+		}
+		for (User u : tiedTimeslot.getUnofficialUsers()) {
 			System.out.printf("Removing role %s (id: %s, args) from %s\n", toRemove.getName(), toRemove.getId(), u.getName());
 			tiedTimeslot.getContestGuild().getController()
 				.removeRolesFromMember(tiedTimeslot.getContestGuild().getMember(u), toRemove).queue((Void) -> {
