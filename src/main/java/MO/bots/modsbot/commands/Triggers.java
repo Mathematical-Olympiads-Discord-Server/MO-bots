@@ -39,7 +39,7 @@ public class Triggers extends ListenerAdapter {
 			event.getChannel().sendMessage("Hello! We are a Mathematical Olympiad discord server. "
 				+ "If you want homework help, please visit the **Homework Help** discord server at "
 				+ "<https://discord.gg/YudDZtb> or the **Mathematics** discord server at "
-				+ "<https://discord.sg/math>. Thank you!");
+				+ "<https://discord.sg/math>. Thank you!").complete();
 			return;
 		}
 	}
