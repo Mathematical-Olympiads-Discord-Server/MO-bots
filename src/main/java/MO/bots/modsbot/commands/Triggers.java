@@ -34,7 +34,7 @@ public class Triggers extends ListenerAdapter {
 			event.getChannel().sendMessage(toReply.get(event.getMessage().getContentRaw())).complete();
 			return;
 		}
-		String s = event.getMessage().getContentRaw();
+		String s = event.getMessage().getContentRaw().toLowerCase();
 		if (s.contains("help") && s.contains("with") && (s.contains("homework") || s.contains("hw"))) {
 			event.getChannel().sendMessage("Hello! We are a Mathematical Olympiad discord server. "
 				+ "If you want homework help, please visit the **Homework Help** discord server at "
