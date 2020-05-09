@@ -609,7 +609,7 @@ class Timeslot {
 		schedule.add(new ReminderTask(this, "5 minutes left before the contest ends. ", "5 minues left reminder (unofficial)",
 				this.endTime.minus(Duration.ofMinutes(5)), WhoToPing.UNOFFICIAL));
 		schedule.add(new ReminderTask(this, "The contest is over. Please submit your solutions to this form "
-				+ "within 1 day of your timeslot ending: <" + formLink + ">. Further instructions are "
+				+ "within 36 hours of your timeslot ending: <" + formLink + ">. Further instructions are "
 				+ "available in the form.\n\nThank you for participating in this contest!",
 				"Contest end reminder", this.endTime, WhoToPing.OFFICIAL));
 		schedule.add(new ReminderTask(this, "The contest is over. ", "Contest end reminder (unofficial)", this.endTime, WhoToPing.UNOFFICIAL));
@@ -619,15 +619,15 @@ class Timeslot {
 		schedule.add(new ReminderTask(this, "There are 3 hours left to submit scripts. If you wish to have a later submission"
 				+ " deadline, that can be negotiated by DMing Staff Mail. Otherwise, note that failure to submit"
 				+ " scripts will result in a ban from contests up to and including the next same-level contest. Although"
-				+ " the form is open after 1 day to allow people from later timeslots to submit scripts, we reserve"
+				+ " the form is open after 36 hours to allow people from later timeslots to submit scripts, we reserve"
 				+ " the right to not accept scripts submitted after this deadline. ", 
-						"submit scripts reminder", this.endTime.plus(Duration.ofHours(21)), WhoToPing.OFFICIAL));
+						"submit scripts reminder", this.endTime.plus(Duration.ofHours(33)), WhoToPing.OFFICIAL));
 		schedule.add(new ReminderTask(this, "There is 1 hour left to submit scripts. If you wish to have a later submission"
 				+ " deadline, that can be negotiated by DMing Staff Mail. Otherwise, note that failure to submit"
 				+ " scripts will result in a ban from contests up to and including the next same-level contest. Although"
-				+ " the form is open after 1 day to allow people from later timeslots to submit scripts, we reserve"
+				+ " the form is open after 36 hours to allow people from later timeslots to submit scripts, we reserve"
 				+ " the right to not accept scripts submitted after this deadline. ", 
-						"submit scripts reminder", this.endTime.plus(Duration.ofHours(23)), WhoToPing.OFFICIAL));
+						"submit scripts reminder", this.endTime.plus(Duration.ofHours(35)), WhoToPing.OFFICIAL));
 		
 		/*
 		beforeContestReminder = new ReminderTask(this, "15 minutes left before the contest starts. "
