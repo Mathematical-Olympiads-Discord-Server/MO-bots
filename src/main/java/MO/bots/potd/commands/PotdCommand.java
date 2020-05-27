@@ -131,8 +131,9 @@ public class PotdCommand extends CommandWithLogging {
 					}
 					r.getManager().setMentionable(true).complete();
 					source.append(r.getAsMention());*/
-					mre.getTextChannel().sendMessage(source).complete();
+					Message m = mre.getTextChannel().sendMessage(source).complete();
 					//r.getManager().setMentionable(false).complete();
+					m.addReaction("👍");
 					
 					
 					event.getMessage().delete().complete();
