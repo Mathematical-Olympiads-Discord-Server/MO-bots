@@ -148,6 +148,6 @@ public class MainClass {
 		modsBot.addEventListener(new Verification());
 		modsBot.addEventListener(new Triggers());
 		//modsBot.addEventListener(new AutoDelete());
-		modsBot.build();
+		//modsBot.build();
 	}
 }
