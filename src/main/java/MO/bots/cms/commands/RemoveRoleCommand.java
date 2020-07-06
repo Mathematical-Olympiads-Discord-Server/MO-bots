@@ -71,7 +71,7 @@ public class RemoveRoleCommand extends CommandWithLogging {
 				}
 				
 				for (Member m : event.getGuild().getMembersWithRoles(toRemove)) {
-					event.getGuild().getController().removeRolesFromMember(m, toRemove).queue();
+					event.getGuild().getController().removeRolesFromMember(m, toRemove).complete();
 				}
 				event.reply("Removed all members from role " + toRemove.getName() + " (id: " + toRemove.getId() + ")");
 			}
@@ -88,7 +88,7 @@ public class RemoveRoleCommand extends CommandWithLogging {
 			}
 			
 			for (Member m : event.getGuild().getMembersWithRoles(toRemove)) {
-				event.getGuild().getController().removeRolesFromMember(m, toRemove).queue();
+				event.getGuild().getController().removeRolesFromMember(m, toRemove).complete();
 			}
 			event.reply("Done!");
 		} catch (NumberFormatException n) {
